@@ -1,0 +1,1520 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hotel PeP | Papy et Petit-fils 架空飯店企劃特設網頁</title>
+        <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
+  <!-- Bootstrap 5 CSS (CDN) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <style>
+    body {
+      color: #AC9E50;
+    }
+    .modal {
+        color: #666;
+    }
+    .cursor-pointer {
+        cursor: pointer;
+    }
+
+    #loading-overlay {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #374039;
+      background: linear-gradient(180deg,rgba(55, 64, 57, 1) 0%, rgba(56, 94, 61, 1) 100%);
+      z-index: 1050;
+      transition: opacity 300ms ease, visibility 300ms ease;
+      opacity: 1;
+      visibility: visible;
+      overflow: hidden;
+    }
+
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      overflow: hidden;
+    }
+
+    #loading-overlay.loaded {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .loading-inner {
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .loading-text {
+      margin-top: 0.75rem;
+      font-size: 1rem;
+      font-family: "Cormorant Garamond", serif;
+      font-optical-sizing: auto;
+      font-weight: 700;
+      font-style: italic;
+    }
+
+    .text-cormorant {
+        font-family: "Cormorant Garamond", serif;
+    }
+
+    body.loading-locked {
+      overflow: hidden;
+    }
+
+    .loading-decor-left,
+    .loading-decor-right {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: auto;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .loading-decor-left { left: 0; }
+    .loading-decor-right { right: 0; }
+
+    .loading-decor-left img,
+    .loading-decor-right img {
+      height: 100%;
+      width: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    .loading-logo {
+      width: 200px;
+      height: auto;
+      z-index: 10000;
+    }
+
+    .page-decor-left,
+    .page-decor-right {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      width: auto;
+      height: 100%;
+      z-index: 100;
+    }
+
+    .page-decor-left { left: 0; }
+    .page-decor-right { right: 0; }
+
+    .page-decor-left img,
+    .page-decor-right img {
+      height: 100%;
+      width: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    .container-fluid {
+      background: #374039;
+      background: linear-gradient(180deg,rgba(55, 64, 57, 1) 0%, rgba(56, 94, 61, 1) 100%);
+
+    }
+
+    .chest {
+        max-width: 850px;
+        margin: 0px auto;
+    }
+
+    .chest-top {
+        background-image: url("assets/img/chest-back.png");
+        background-repeat: no-repeat;
+        background-position: center 20px;
+        background-size: 100%;
+    }
+
+    .chest-mid {
+        background-image: url("assets/img/chest-mid.png");
+        background-repeat: repeat-y;
+        background-position: center 20px;
+        background-size: 100%;
+    }
+
+    .chest-bottom {
+        background-image: url("assets/img/chest-footer.png");
+        background-repeat: no-repeat;
+        background-position: center bottom;
+        background-size: 100%;
+    }
+
+    .number {
+        font-family: "Cormorant Garamond", serif;
+        font-optical-sizing: auto;
+        font-weight: bolder;
+        font-style: italic;
+        font-size: 3.5rem;
+        line-height: 3.2rem;
+    }
+
+    .product-name {
+        font-weight: bolder;
+        font-size: 1.1rem;
+    }
+
+    .price {
+        font-weight: bolder;
+        font-style: italic;
+        font-size: 1rem;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+        line-height: 1rem;
+    }
+
+    .modal .price {
+        color: #AC9E50;
+        font-size: 1.2rem;
+        line-height: 1.5rem;
+
+    }
+
+    /* =======================
+       🔹 翻轉卡片效果
+       ======================= */
+    .key-back {
+      perspective: 1000px; /* 建立3D空間 */
+    }
+
+
+    .key-back-img {
+        background-image: url("assets/img/key-back.png");
+        background-repeat: no-repeat;
+        background-position: center top;
+        background-size: 79%;
+    }
+
+    .key-wrap {
+      position: relative;
+      width: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.8s ease;
+      height: 200px;
+    }
+
+    /*.product-card:hover .key-wrap {
+      transform: rotateY(180deg);
+    }*/
+    .product-card.flipped .key-wrap {
+      transform: rotateY(180deg);
+    }
+
+    .key-front, .key-backside {
+      position: absolute;
+      width: 100%;
+      backface-visibility: hidden; /* 隱藏背面 */
+    }
+
+    .key-front {
+      z-index: 2;
+      transform: rotateY(0deg);
+    }
+
+    .key-backside {
+      transform: rotateY(180deg);
+    }
+
+    /* 🔸 背面商品圖樣式 */
+    .diamond-wrapper {
+      width: 100px;
+      height: 100px;
+      overflow: hidden;
+      transform: rotate(45deg); /* 外層旋轉 45 度 */
+      border: 3px solid #AC9E50;
+      margin: 50px auto 50px auto;
+    }
+
+    .product-img {
+      width: 150%;
+      height: 150%;
+      object-fit: cover;
+      transform: rotate(-45deg); /* 內層反向旋轉讓圖片保持直立 */
+      margin-top: -22%;
+      margin-left: -22%;
+    }
+
+    .product-thumb {
+      cursor: pointer;
+      opacity: 0.7;
+      transition: all 0.2s ease;
+    }
+
+    .product-thumb:hover {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+
+    .product-thumb.active {
+      border: 2px solid #AC9E50;
+      opacity: 1;
+    }
+
+    /* 裝飾區塊基礎設定 */
+    .star-decor {
+      position: fixed;
+      top: 0;
+      z-index: 200;
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+      pointer-events: none;
+    }
+
+    /* 左右位置 */
+    .star-decor-left {
+      left: 50px;
+    }
+
+    .star-decor-right {
+      right: 50px;
+      flex-direction: row-reverse;
+    }
+
+    /* 每條鍊條 */
+    .chain {
+      width: 60px;
+      height: auto;
+      transform-origin: top center; /* 以鍊條上端為旋轉軸 */
+      animation-timing-function: ease-in-out;
+      animation-iteration-count: infinite;
+      animation: swingRotate 4s ease-in-out infinite;
+      backface-visibility: visible;
+  transform-style: preserve-3d;
+  filter: brightness(0.9);
+    }
+
+    /* 每條不同的動畫與速度 */
+    .chain-1 {
+      animation: sway-left 4s infinite alternate, spin-left 8s ease-in-out infinite;
+      position: relative;
+      top: -80px;
+    }
+    .chain-2 {
+      animation: sway-right 5.5s infinite alternate, spin-right 10s ease-in-out infinite;
+      position: relative;
+      top: -10px;
+    }
+    .chain-3 {
+      animation: sway-left 6.5s infinite alternate, spin-left 9s ease-in-out infinite;
+      position: relative;
+      top: -100px;
+    }
+    .chain-4 {
+      animation: sway-right 5s infinite alternate, spin-left 7s ease-in-out infinite;
+      position: relative;
+      top: -100px;
+    }
+    .chain-5 {
+      animation: sway-left 7s infinite alternate, spin-right 11s ease-in-out infinite;
+      position: relative;
+      top: -30px;
+    }
+    .chain-6 {
+      animation: sway-right 4.5s infinite alternate, spin-left 12s ease-in-out infinite;
+      position: relative;
+      top: -75px;
+    }
+
+    .mainProductImage {
+        cursor: pointer;
+    }
+
+    @keyframes spin-left {
+      0%   { transform: rotateY(1deg); }
+      100% { transform: rotateY(359deg); }
+    }
+
+    @keyframes spin-right {
+      0%   { transform: rotateY(1deg); }
+      100% { transform: rotateY(-359deg); }
+    }
+
+    /* 定義左右擺動動畫 */
+    @keyframes sway-left {
+      0% { transform: rotate(2deg); }
+      100% { transform: rotate(-4deg); }
+    }
+
+    @keyframes sway-right {
+      0% { transform: rotate(-3deg); }
+      100% { transform: rotate(3deg); }
+    }
+
+    @keyframes swingRotate {
+      0% {
+        transform: rotate(5deg) rotateY(0deg);
+      }
+      25% {
+        transform: rotate(0deg) rotateY(5deg);
+      }
+      50% {
+        transform: rotate(-5deg) rotateY(0deg);
+      }
+      75% {
+        transform: rotate(0deg) rotateY(-5deg);
+      }
+      100% {
+        transform: rotate(5deg) rotateY(0deg);
+      }
+    }
+
+    /* RWD：小螢幕時隱藏 */
+    @media (max-width: 768px) {
+      .star-decor {
+        display: none;
+      }
+    }
+
+
+    @media (max-width: 1025px) {
+      .page-decor-left,
+      .page-decor-right {
+        display: none;
+      }
+    }
+
+    @media (hover: hover) {
+      .product-card:hover .key-wrap {
+        transform: rotateY(180deg);
+      }
+}
+
+    @media (max-width: 767.98px) {
+      .loading-decor-left,
+      .loading-decor-right {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body class="loading-locked">
+
+  <div id="loading-overlay" role="status" aria-live="polite" aria-label="頁面載入中">
+    <div class="loading-decor-left">
+      <img src="assets/img/curtain-left.png" alt="左側裝飾圖">
+    </div>
+    <div class="loading-decor-right">
+      <img src="assets/img/curtain-right.png" alt="右側裝飾圖">
+    </div>
+
+    <div class="loading-inner">
+      <img src="assets/img/loading-img.gif" alt="Loading..." class="loading-logo" />
+      <div class="loading-text fs-3 fw-bold">Loading for check in...</div>
+    </div>
+  </div>
+
+  <!-- 吊鍊裝飾區 -->
+<div class="star-decor star-decor-left">
+  <img src="assets/img/star.png" class="chain chain-1">
+  <img src="assets/img/star.png" class="chain chain-2">
+  <img src="assets/img/star.png" class="chain chain-3">
+</div>
+
+<div class="star-decor star-decor-right">
+  <img src="assets/img/star.png" class="chain chain-4">
+  <img src="assets/img/star.png" class="chain chain-5">
+  <img src="assets/img/star.png" class="chain chain-6">
+</div>
+
+  <div class="page-decor-left">
+    <img src="assets/img/curtain-left.png" alt="左側裝飾圖">
+  </div>
+  <div class="page-decor-right">
+    <img src="assets/img/curtain-right.png" alt="右側裝飾圖">
+  </div>
+
+  <main class="container-fluid">
+
+    <div class="chest text-center">
+      <div class="chest-top row g-3 px-5 mx-5" style="padding-top: 36%;">
+        <div class="col-md-4 p-3">
+        </div>
+      </div>
+      <div class="row chest-mid g-3 px-5 mx-5 d-flex flex-wrap justify-content-center">
+        <div class="col-md-4 px-3 pb-3 pt-0 cursor-pointer product-card">
+            <div class="key-back key-back-img">
+                <div class="key-wrap">
+                    <!-- 正面 -->
+                    <div class="key-front">
+                      <img src="assets/img/question.png" class="img-fluid px-4">
+                    </div>
+                    <!-- 背面 -->
+                    <div class="key-backside">
+                        <p class="mt-5 pt-5 text-cormorant fw-bold fs-4">Coming Soon</p>
+                    </div>
+                </div>
+                <div class="number">000</div>
+                <div class="product-name">Hotel PeP 概念小誌</div>
+                <div class="price">NT.350</div>
+            </div>
+        </div>
+        <div class="col-md-4 px-3 pb-3 pt-0 cursor-pointer product-card" data-bs-toggle="modal" data-bs-target="#productModal1">
+            <div class="key-back key-back-img">
+                <div class="key-wrap">
+                    <!-- 正面 -->
+                    <div class="key-front">
+                      <img src="assets/img/key.png" class="img-fluid px-4">
+                    </div>
+                    <!-- 背面 -->
+                    <div class="key-backside">
+                        <div class="diamond-wrapper">
+                          <img src="assets/img/prod-img-1-sml.jpg" alt="商品圖" class="product-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="number">001</div>
+                <div class="product-name">絨布提袋</div>
+                <div class="price">NT.350</div>
+            </div>
+        </div>
+        <div class="col-md-4 px-3 pb-3 pt-0 cursor-pointer product-card" data-bs-toggle="modal" data-bs-target="#productModal2">
+            <div class="key-back key-back-img">
+                <div class="key-wrap">
+                    <!-- 正面 -->
+                    <div class="key-front">
+                      <img src="assets/img/key.png" class="img-fluid px-4">
+                    </div>
+                    <!-- 背面 -->
+                    <div class="key-backside">
+                        <div class="diamond-wrapper">
+                          <img src="assets/img/prod-img-3-sml.jpg" alt="商品圖" class="product-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="number">002</div>
+                <div class="product-name">飯店鑰匙吊飾</div>
+                <div class="price">NT.350</div>
+            </div>
+        </div>
+        <div class="col-md-4 px-3 pb-3 pt-0 cursor-pointer product-card" data-bs-toggle="modal" data-bs-target="#productModal3">
+            <div class="key-back key-back-img">
+                <div class="key-wrap">
+                    <!-- 正面 -->
+                    <div class="key-front">
+                      <img src="assets/img/key.png" class="img-fluid px-4">
+                    </div>
+                    <!-- 背面 -->
+                    <div class="key-backside">
+                        <div class="diamond-wrapper">
+                          <img src="assets/img/prod-img-6-sml.jpg" alt="商品圖" class="product-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="number">003</div>
+                <div class="product-name">壓克力流蘇耳環</div>
+                <div class="price">NT.350</div>
+            </div>
+        </div>
+        <div class="col-md-4 px-3 pb-3 pt-0 cursor-pointer product-card" data-bs-toggle="modal" data-bs-target="#productModal4">
+            <div class="key-back key-back-img">
+                <div class="key-wrap">
+                    <!-- 正面 -->
+                    <div class="key-front">
+                      <img src="assets/img/key.png" class="img-fluid px-4">
+                    </div>
+                    <!-- 背面 -->
+                    <div class="key-backside">
+                        <div class="diamond-wrapper">
+                          <img src="assets/img/prod-img-7-sml.jpg" alt="商品圖" class="product-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="number">004</div>
+                <div class="product-name">珍珠/蕾絲項鍊</div>
+                <div class="price">NT.350</div>
+            </div>
+        </div>
+        <div class="col-md-4 px-3 pb-3 pt-0 cursor-pointer product-card" data-bs-toggle="modal" data-bs-target="#productModal5">
+            <div class="key-back key-back-img">
+                <div class="key-wrap">
+                    <!-- 正面 -->
+                    <div class="key-front">
+                      <img src="assets/img/key.png" class="img-fluid px-4">
+                    </div>
+                    <!-- 背面 -->
+                    <div class="key-backside">
+                        <div class="diamond-wrapper">
+                          <img src="assets/img/prod-img-8-sml.jpg" alt="商品圖" class="product-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="number">005</div>
+                <div class="product-name">皮革行李吊牌</div>
+                <div class="price">NT.350</div>
+            </div>
+        </div>
+        <div class="col-md-4 px-3 pb-3 pt-0 cursor-pointer product-card" data-bs-toggle="modal" data-bs-target="#productModal6">
+            <div class="key-back key-back-img">
+                <div class="key-wrap">
+                    <!-- 正面 -->
+                    <div class="key-front">
+                      <img src="assets/img/key.png" class="img-fluid px-4">
+                    </div>
+                    <!-- 背面 -->
+                    <div class="key-backside">
+                        <div class="diamond-wrapper">
+                          <img src="assets/img/prod-img-13-sml.jpg" alt="商品圖" class="product-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="number">006</div>
+                <div class="product-name">飲料提袋套組</div>
+                <div class="price">NT.350</div>
+            </div>
+        </div>
+        <div class="col-md-4 px-3 pb-3 pt-0 cursor-pointer product-card" data-bs-toggle="modal" data-bs-target="#productModal7">
+            <div class="key-back key-back-img">
+                <div class="key-wrap">
+                    <!-- 正面 -->
+                    <div class="key-front">
+                      <img src="assets/img/key.png" class="img-fluid px-4">
+                    </div>
+                    <!-- 背面 -->
+                    <div class="key-backside">
+                        <div class="diamond-wrapper">
+                          <img src="assets/img/prod-img-14-sml.jpg" alt="商品圖" class="product-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="number">007</div>
+                <div class="product-name">木製夾子</div>
+                <div class="price">NT.350</div>
+            </div>
+        </div>
+        <div class="col-md-4 px-3 pb-3 pt-0 cursor-pointer product-card" data-bs-toggle="modal" data-bs-target="#productModal8">
+            <div class="key-back key-back-img">
+                <div class="key-wrap">
+                    <!-- 正面 -->
+                    <div class="key-front">
+                      <img src="assets/img/key.png" class="img-fluid px-4">
+                    </div>
+                    <!-- 背面 -->
+                    <div class="key-backside">
+                        <div class="diamond-wrapper">
+                          <img src="assets/img/prod-img-17-sml.jpg" alt="商品圖" class="product-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="number">008</div>
+                <div class="product-name">吸水杯墊</div>
+                <div class="price">NT.350</div>
+            </div>
+        </div>
+        <div class="col-md-4 px-3 pb-3 pt-0 cursor-pointer product-card" data-bs-toggle="modal" data-bs-target="#productModal9">
+            <div class="key-back key-back-img">
+                <div class="key-wrap">
+                    <!-- 正面 -->
+                    <div class="key-front">
+                      <img src="assets/img/key.png" class="img-fluid px-4">
+                    </div>
+                    <!-- 背面 -->
+                    <div class="key-backside">
+                        <div class="diamond-wrapper">
+                          <img src="assets/img/prod-img-19-sml.jpg" alt="商品圖" class="product-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="number">009</div>
+                <div class="product-name">鐵盒貼紙組</div>
+                <div class="price">NT.350</div>
+            </div>
+        </div>
+        <div class="col-md-4 px-3 pb-3 pt-0 cursor-pointer product-card" data-bs-toggle="modal" data-bs-target="#productModal10">
+            <div class="key-back key-back-img">
+                <div class="key-wrap">
+                    <!-- 正面 -->
+                    <div class="key-front">
+                      <img src="assets/img/key.png" class="img-fluid px-4">
+                    </div>
+                    <!-- 背面 -->
+                    <div class="key-backside">
+                        <div class="diamond-wrapper">
+                          <img src="assets/img/prod-img-21-sml.jpg" alt="商品圖" class="product-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="number">010</div>
+                <div class="product-name">擦手巾</div>
+                <div class="price">NT.350</div>
+            </div>
+        </div>
+      </div>
+      <div class="chest-bottom row g-3 px-5 mx-5" style="padding-bottom: 10%;">
+        <div class="col-md-4 p-3">
+        </div>
+      </div>
+      <footer class="text-center py-5">
+          <div class="container">
+            <!-- Instagram 區塊 -->
+            <div class="mb-3">
+              <a href="https://www.instagram.com/papyetpetitfils/" target="_blank" class="text-decoration-none" style="color: #D2BC69;">
+                <i class="bi bi-instagram" style="font-size: 2rem;"></i>
+                <div class="fw-bold mt-2" style="font-family: 'Cormorant Garamond', serif; font-size: 1.1rem;">
+                  PeP Instagram
+                </div>
+              </a>
+            </div>
+
+            <!-- 版權文字 -->
+            <div style="font-family: 'Cormorant Garamond', serif; font-size: 0.9rem;" class="fw-bold">
+              2025 Papy et petit-fils All Rights Reserved
+            </div>
+          </div>
+        </footer>
+    </div>
+  </main>
+
+    <!-- =======================
+       💬 Bootstrap Modal
+       ======================= -->
+  <div class="modal fade" id="productModal1" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content rounded-4">
+      <div class="modal-header border-0">
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-4">
+          <!-- 左側：圖片區 -->
+          <div class="col-md-6">
+            <div class="product-gallery text-center position-relative">
+
+              <!-- Loading 圖示 -->
+              <div class="image-loading position-absolute top-50 start-50 translate-middle d-none" 
+                   style="z-index:10;">
+                <div class="spinner-border text-secondary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+
+              <!-- 主圖 -->
+              <img class="mainProductImage img-fluid rounded mb-3" 
+                   src="assets/img/prod-img-1.jpg" 
+                   alt="主商品圖">
+
+              <!-- 小圖列 -->
+              <div class="d-flex justify-content-center gap-2">
+                <img 
+                  src="assets/img/prod-img-1-sml.jpg" 
+                  data-large="assets/img/prod-img-1.jpg"
+                  class="img-thumbnail product-thumb active" 
+                  alt="商品小圖1" 
+                  width="70">
+                <img 
+                  src="assets/img/prod-img-2-sml.jpg" 
+                  data-large="assets/img/prod-img-2.jpg"
+                  class="img-thumbnail product-thumb" 
+                  alt="商品小圖2" 
+                  width="70">
+              </div>
+            </div>
+          </div>
+
+          <!-- 右側：商品資訊 -->
+          <div class="col-md-6">
+            <div class="product-info text-left pe-3">
+              <h4 class="fw-bold mb-2" id="productModalLabel">絨布刺繡托特袋 Velvet Tote Bag</h4>
+              <p class="price mb-3">NT$350</p>
+              <p class="mb-3">
+                柔軟的絨布材質搭配低調光澤，如同入住老飯店的午後光影。
+                袋面以 Hotel PeP 經典 LOGO 徽章刺繡呈現，容量寬敞，可輕鬆收納書本、平板或日常隨身物品。
+                無論是出門散步、咖啡小憩，或作為旅行中的輕便包款，都能襯托出優雅氣息。
+              </p>
+              <p>
+                可與 Hotel PeP 絨布托特袋 Velvet Tote Bag 搭配使用，讓整體造型更添飯店房客般的優雅氣質。
+              </p>
+              <p class="mb-1"><strong>尺寸：</strong> 34cm × 39cm，提把垂直高度25cm</p>
+              <p class="mb-1"><strong>材質：</strong> 絨布</p>
+              <p class="mb-4"><strong>樣式：</strong> 暮林綠 / 霞粉玫瑰</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="modal fade" id="productModal2" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content rounded-4">
+      <div class="modal-header border-0">
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-4">
+          <!-- 左側：圖片區 -->
+          <div class="col-md-6">
+            <div class="product-gallery text-center position-relative">
+
+              <!-- Loading 圖示 -->
+              <div class="image-loading position-absolute top-50 start-50 translate-middle d-none"
+                   style="z-index:10;">
+                <div class="spinner-border text-secondary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+
+              <!-- 主圖 -->
+              <img class="mainProductImage img-fluid rounded mb-3" 
+                   src="assets/img/prod-img-3.jpg"
+                   alt="主商品圖">
+
+              <!-- 小圖列 -->
+              <div class="d-flex justify-content-center gap-2">
+                <img 
+                  src="assets/img/prod-img-3-sml.jpg" 
+                  data-large="assets/img/prod-img-3.jpg"
+                  class="img-thumbnail product-thumb active" 
+                  alt="商品小圖1" 
+                  width="70">
+                <img 
+                  src="assets/img/prod-img-4-sml.jpg" 
+                  data-large="assets/img/prod-img-4.jpg"
+                  class="img-thumbnail product-thumb active" 
+                  alt="商品小圖1" 
+                  width="70">
+                <img 
+                  src="assets/img/prod-img-5-sml.jpg" 
+                  data-large="assets/img/prod-img-5.jpg"
+                  class="img-thumbnail product-thumb" 
+                  alt="商品小圖2" 
+                  width="70">
+                <img 
+                  src="assets/img/prod-img-2-sml.jpg" 
+                  data-large="assets/img/prod-img-2.jpg"
+                  class="img-thumbnail product-thumb" 
+                  alt="商品小圖2" 
+                  width="70">
+              </div>
+            </div>
+          </div>
+
+          <!-- 右側：商品資訊 -->
+          <div class="col-md-6">
+            <div class="product-info text-left pe-3">
+              <h4 class="fw-bold mb-2" id="productModalLabel">飯店鑰匙壓克力吊飾 Acrylic Key Charm</h4>
+              <p class="price mb-3">NT$350</p>
+              <p class="mb-3">
+                靈感取自老式旅館的房門鑰匙牌設計，以壓克力呈現細緻浮雕感，並搭配復古黃銅鑰匙圈與流蘇細節。
+              </p>
+              <p>
+                共有多款房號與造型，從 222、333 到 999，每一枚吊飾都象徵著不同房間的記憶與氣氛。無論作為鑰匙圈、包飾或收藏小物，都能為日常增添一抹懷舊的旅店風情。
+              </p>
+              <p class="mb-1"><strong>尺寸：</strong> 壓克力吊飾約 5–6 cm，整體長度約 9 cm</p>
+              <p class="mb-1"><strong>材質：</strong> 壓克力 / 金屬鑰匙 / 棉線流蘇</p>
+              <p class="mb-4"><strong>樣式：</strong>
+              <br>Room 222：粉霧珍珠 × 金色壓印
+              <br>Room 333：祖母綠 × 銀色壓印
+              <br>Room 666：夜光黑 × 金色壓印
+              <br>Room 999：乳白粉 × 銀色壓印</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="modal fade" id="productModal3" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content rounded-4">
+      <div class="modal-header border-0">
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-4">
+          <!-- 左側：圖片區 -->
+          <div class="col-md-6">
+            <div class="product-gallery text-center position-relative">
+
+              <!-- Loading 圖示 -->
+              <div class="image-loading position-absolute top-50 start-50 translate-middle d-none"
+                   style="z-index:10;">
+                <div class="spinner-border text-secondary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+
+              <!-- 主圖 -->
+              <img class="mainProductImage img-fluid rounded mb-3" 
+                   src="assets/img/prod-img-6.jpg"
+                   alt="主商品圖">
+
+              <!-- 小圖列 -->
+              <div class="d-flex justify-content-center gap-2">
+                <img 
+                  src="assets/img/prod-img-6-sml.jpg" 
+                  data-large="assets/img/prod-img-6.jpg"
+                  class="img-thumbnail product-thumb active" 
+                  alt="商品小圖1" 
+                  width="70">
+                <img 
+                  src="assets/img/prod-img-7-sml.jpg" 
+                  data-large="assets/img/prod-img-7.jpg"
+                  class="img-thumbnail product-thumb" 
+                  alt="商品小圖2" 
+                  width="70">
+              </div>
+            </div>
+          </div>
+
+          <!-- 右側：商品資訊 -->
+          <div class="col-md-6">
+            <div class="product-info text-left pe-3">
+              <h4 class="fw-bold mb-2" id="productModalLabel">壓克力流蘇耳環 Acrylic Tassel Earrings</h4>
+              <p class="price mb-3">NT$350</p>
+              <p class="mb-3">
+                以 Hotel PeP 經典徽章為設計主軸，搭配閃耀細緻光澤的壓克力吊墜與金色流蘇，呈現如老飯店吊燈般的柔亮質感。
+              </p>
+              <p>
+                每一對耳環皆以手工組裝完成，無論是日常搭配或特別場合，都能為造型增添一絲英式復古的優雅。
+              </p>
+              <p class="mb-1"><strong>尺寸：</strong> 壓克力吊飾約 2.5 cm，整體長度約 6 cm</p>
+              <p class="mb-1"><strong>材質：</strong> 壓克力 / 金色流蘇</p>
+              <p class="mb-1"><strong>款式：</strong> 耳夾式 / 耳針式（鍍14K金，附防過敏矽膠配件）</p>
+              <p class="mb-4"><strong>樣式：</strong> 暮林綠 / 霞粉玫瑰，金色壓印 / 銀色壓印</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="modal fade" id="productModal5" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content rounded-4">
+      <div class="modal-header border-0">
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-4">
+          <!-- 左側：圖片區 -->
+          <div class="col-md-6">
+            <div class="product-gallery text-center position-relative">
+
+              <!-- Loading 圖示 -->
+              <div class="image-loading position-absolute top-50 start-50 translate-middle d-none"
+                   style="z-index:10;">
+                <div class="spinner-border text-secondary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+
+              <!-- 主圖 -->
+              <img class="mainProductImage img-fluid rounded mb-3" 
+                   src="assets/img/prod-img-8.jpg"
+                   alt="主商品圖">
+
+              <!-- 小圖列 -->
+              <div class="d-flex justify-content-center gap-2">
+                <img 
+                  src="assets/img/prod-img-8-sml.jpg" 
+                  data-large="assets/img/prod-img-8.jpg"
+                  class="img-thumbnail product-thumb active" 
+                  alt="商品小圖1" 
+                  width="70">
+                <img 
+                  src="assets/img/prod-img-9-sml.jpg" 
+                  data-large="assets/img/prod-img-9.jpg"
+                  class="img-thumbnail product-thumb" 
+                  alt="商品小圖2" 
+                  width="70">
+              </div>
+            </div>
+          </div>
+
+          <!-- 右側：商品資訊 -->
+          <div class="col-md-6">
+            <div class="product-info text-left pe-3">
+              <h4 class="fw-bold mb-2" id="productModalLabel">皮革行李吊牌 Leather Luggage Tag</h4>
+              <p class="price mb-3">NT$350</p>
+              <p class="mb-3">
+                靈感源自老飯店櫃台的行李寄存札，以霧棕皮革搭配金色 Hotel PeP 字樣燙印，卡套內附印有插畫式入住資料卡，讓每一次啟程都像領取一張飯店房卡般充滿儀式感。
+              </p>
+              <p>
+                附可調式皮帶扣環，可固定於行李箱、背包或旅行袋。無論是長途旅行或週末出行，都能在眾多行李中一眼辨識出專屬於你的旅程印記。
+              </p>
+              <p class="mb-1"><strong>尺寸：</strong> 約 8 × 11 cm（不含皮帶）</p>
+              <p class="mb-1"><strong>材質：</strong> 合成皮革 / 金箔燙印 / 紙質資料卡</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="modal fade" id="productModal6" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content rounded-4">
+      <div class="modal-header border-0">
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-4">
+          <!-- 左側：圖片區 -->
+          <div class="col-md-6">
+            <div class="product-gallery text-center position-relative">
+
+              <!-- Loading 圖示 -->
+              <div class="image-loading position-absolute top-50 start-50 translate-middle d-none"
+                   style="z-index:10;">
+                <div class="spinner-border text-secondary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+
+              <!-- 主圖 -->
+              <img class="mainProductImage img-fluid rounded mb-3" 
+                   src="assets/img/prod-img-11.jpg"
+                   alt="主商品圖">
+
+              <!-- 小圖列 -->
+              <div class="d-flex justify-content-center gap-2">
+                <img 
+                  src="assets/img/prod-img-11-sml.jpg" 
+                  data-large="assets/img/prod-img-11.jpg"
+                  class="img-thumbnail product-thumb active" 
+                  alt="商品小圖1" 
+                  width="70">
+                <img 
+                  src="assets/img/prod-img-12-sml.jpg" 
+                  data-large="assets/img/prod-img-12.jpg"
+                  class="img-thumbnail product-thumb" 
+                  alt="商品小圖2" 
+                  width="70">
+                <img 
+                  src="assets/img/prod-img-13-sml.jpg" 
+                  data-large="assets/img/prod-img-13.jpg"
+                  class="img-thumbnail product-thumb" 
+                  alt="商品小圖2" 
+                  width="70">
+              </div>
+            </div>
+          </div>
+
+          <!-- 右側：商品資訊 -->
+          <div class="col-md-6">
+            <div class="product-info text-left pe-3">
+              <h4 class="fw-bold mb-2" id="productModalLabel">飲料提袋套組 Drink Tote Set</h4>
+              <p class="price mb-3">NT$350</p>
+              <p class="mb-3">
+                以「Landlord’s Afternoon Tea」為主題設計，描繪爺爺於午後時光享用茶點的溫暖情景。
+              </p>
+              <p>
+                提袋可摺疊收納，附同款吸水杯墊與金屬吊飾，展開後可容納飲料杯、保溫瓶或隨身水壺，搭配附贈的吸水軟杯墊，能迅速吸附水珠，喝冰飲時也保持乾爽整潔。
+              </p>
+              <p class="mb-1"><strong>尺寸：</strong> 約 4 × 6 cm（單座）</p>
+              <p class="mb-1"><strong>材質：</strong> 木材（印刷上色）/ 塑膠夾子</p>
+              <p class="mb-4"><strong>樣式：</strong> 「Check in」旅館入住立牌 / 「Today’s Menu」今日餐點立牌</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <div class="modal fade" id="productModal7" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content rounded-4">
+      <div class="modal-header border-0">
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-4">
+          <!-- 左側：圖片區 -->
+          <div class="col-md-6">
+            <div class="product-gallery text-center position-relative">
+
+              <!-- Loading 圖示 -->
+              <div class="image-loading position-absolute top-50 start-50 translate-middle d-none"
+                   style="z-index:10;">
+                <div class="spinner-border text-secondary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+
+              <!-- 主圖 -->
+              <img class="mainProductImage img-fluid rounded mb-3" 
+                   src="assets/img/prod-img-14.jpg"
+                   alt="主商品圖">
+
+              <!-- 小圖列 -->
+              <div class="d-flex justify-content-center gap-2">
+                <img 
+                  src="assets/img/prod-img-14-sml.jpg" 
+                  data-large="assets/img/prod-img-14.jpg"
+                  class="img-thumbnail product-thumb active" 
+                  alt="商品小圖1" 
+                  width="70">
+                <img 
+                  src="assets/img/prod-img-15-sml.jpg" 
+                  data-large="assets/img/prod-img-15.jpg"
+                  class="img-thumbnail product-thumb" 
+                  alt="商品小圖2" 
+                  width="70">
+              </div>
+            </div>
+          </div>
+
+          <!-- 右側：商品資訊 -->
+          <div class="col-md-6">
+            <div class="product-info text-left pe-3">
+              <h4 class="fw-bold mb-2" id="productModalLabel">木製夾子 Wooden Mini Sign Set</h4>
+              <p class="mb-3"><span class="price">NT$350</span> / 每款</p>
+              <p class="mb-3">
+                以老旅館大廳的入住與餐廳告示牌為靈感，縮小成手掌大小的木製擺飾，再現「Check in」與「Today’s Menu」兩款經典場景。雙層木質夾子，表面以印刷上色，保留原木紋理，在光影下呈現溫潤質感，讓人彷彿回到 Hotel PeP 的櫃台與餐室。
+              </p>
+              <p>
+                中間為夾子構造，可輕鬆站立於桌面，適合當小卡座、作為拍照佈景或展示裝飾使用。
+              </p>
+              <p class="mb-1"><strong>尺寸：</strong> <br>提袋：約 16 × 21 cm，底約 9 cm，提把高約 18cm（可收納 750ml 左右飲品）
+              <br>收納口袋：約 10 × 10 cm
+              <br>吸水杯墊：約 9 x 9 cm</p>
+              <p class="mb-1"><strong>材質：</strong> 聚酯纖維牛津布 / 金屬吊飾 / 吸水軟墊材質</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="modal fade" id="productModal8" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content rounded-4">
+      <div class="modal-header border-0">
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-4">
+          <!-- 左側：圖片區 -->
+          <div class="col-md-6">
+            <div class="product-gallery text-center position-relative">
+
+              <!-- Loading 圖示 -->
+              <div class="image-loading position-absolute top-50 start-50 translate-middle d-none"
+                   style="z-index:10;">
+                <div class="spinner-border text-secondary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+
+              <!-- 主圖 -->
+              <img class="mainProductImage img-fluid rounded mb-3" 
+                   src="assets/img/prod-img-17.jpg"
+                   alt="主商品圖">
+
+              <!-- 小圖列 -->
+              <div class="d-flex justify-content-center gap-2">
+                <img 
+                  src="assets/img/prod-img-17-sml.jpg" 
+                  data-large="assets/img/prod-img-17.jpg"
+                  class="img-thumbnail product-thumb active" 
+                  alt="商品小圖1" 
+                  width="70">
+                <img 
+                  src="assets/img/prod-img-18-sml.jpg" 
+                  data-large="assets/img/prod-img-18.jpg"
+                  class="img-thumbnail product-thumb" 
+                  alt="商品小圖2" 
+                  width="70">
+              </div>
+            </div>
+          </div>
+
+          <!-- 右側：商品資訊 -->
+          <div class="col-md-6">
+            <div class="product-info text-left pe-3">
+              <h4 class="fw-bold mb-2" id="productModalLabel">吸水軟杯墊組 Soft Coaster Set</h4>
+              <p class="price mb-3">NT$350</p>
+              <p class="mb-3">
+                以 Hotel PeP 櫃台場景為主題設計，Lobby Grandpa 與 Lobby Boy 兩款插畫，重現老旅館中迎賓的日常一幕，每組含兩款杯墊各一。
+              </p>
+              <p>
+                杯墊表面採透氣皮革材質印刷，中層以軟硅藻泡棉製成，能迅速吸收水珠，底部則加上橡膠防滑層，穩定服貼於桌面。無論放在工作桌或餐桌，都能增添一份 Hotel PeP 式的優雅生活感。
+              </p>
+              <p class="mb-1"><strong>尺寸：</strong> 約 10 × 10 cm</p>
+              <p class="mb-1"><strong>材質：</strong> 透氣皮革表層 / 軟硅藻泡棉中層 / 橡膠防滑底層</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="productModal9" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content rounded-4">
+      <div class="modal-header border-0">
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-4">
+          <!-- 左側：圖片區 -->
+          <div class="col-md-6">
+            <div class="product-gallery text-center position-relative">
+
+              <!-- Loading 圖示 -->
+              <div class="image-loading position-absolute top-50 start-50 translate-middle d-none"
+                   style="z-index:10;">
+                <div class="spinner-border text-secondary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+
+              <!-- 主圖 -->
+              <img class="mainProductImage img-fluid rounded mb-3" 
+                   src="assets/img/prod-img-19.jpg"
+                   alt="主商品圖">
+
+              <!-- 小圖列 -->
+              <div class="d-flex justify-content-center gap-2">
+                <img 
+                  src="assets/img/prod-img-19-sml.jpg" 
+                  data-large="assets/img/prod-img-19.jpg"
+                  class="img-thumbnail product-thumb active" 
+                  alt="商品小圖1" 
+                  width="70">
+                <img 
+                  src="assets/img/prod-img-20-sml.jpg" 
+                  data-large="assets/img/prod-img-20.jpg"
+                  class="img-thumbnail product-thumb" 
+                  alt="商品小圖2" 
+                  width="70">
+              </div>
+            </div>
+          </div>
+
+          <!-- 右側：商品資訊 -->
+          <div class="col-md-6">
+            <div class="product-info text-left pe-3">
+              <h4 class="fw-bold mb-2" id="productModalLabel">鐵盒貼紙組 Tin Box Sticker Set</h4>
+              <p class="price mb-3">NT$350</p>
+              <p class="mb-3">
+                以 Hotel PeP 旅館內的日常場景為主題，將櫃台、行李寄放處、餐廳、房務人員等細節化為插畫貼紙，適合筆記本、或手帳裝飾。
+              </p>
+              <p>
+                貼紙以和紙材質印製，觸感細緻不反光，可重複黏貼。專屬鐵盒設計，盒蓋上印有 Hotel PeP 鑰匙櫃圖樣，內容物包含 Hotel PeP 專屬鐵盒 ×1 與主題貼紙 ×8 款（各 1 張）
+              </p>
+              <p class="mb-1"><strong>尺寸：</strong> 鐵盒約 10 × 7 × 2.5 cm，貼紙約 4–5 cm（依款式略有不同）</p>
+              <p class="mb-1"><strong>材質：</strong> 金屬鐵盒 / 和紙</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="productModal10" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content rounded-4">
+      <div class="modal-header border-0">
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-4">
+          <!-- 左側：圖片區 -->
+          <div class="col-md-6">
+            <div class="product-gallery text-center position-relative">
+
+              <!-- Loading 圖示 -->
+              <div class="image-loading position-absolute top-50 start-50 translate-middle d-none"
+                   style="z-index:10;">
+                <div class="spinner-border text-secondary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+
+              <!-- 主圖 -->
+              <img class="mainProductImage img-fluid rounded mb-3" 
+                   src="assets/img/prod-img-21.jpg"
+                   alt="主商品圖">
+
+              <!-- 小圖列 -->
+              <div class="d-flex justify-content-center gap-2">
+                <img 
+                  src="assets/img/prod-img-21-sml.jpg" 
+                  data-large="assets/img/prod-img-21.jpg"
+                  class="img-thumbnail product-thumb active" 
+                  alt="商品小圖1" 
+                  width="70">
+                <img 
+                  src="assets/img/prod-img-22-sml.jpg" 
+                  data-large="assets/img/prod-img-22.jpg"
+                  class="img-thumbnail product-thumb" 
+                  alt="商品小圖2" 
+                  width="70">
+              </div>
+            </div>
+          </div>
+
+          <!-- 右側：商品資訊 -->
+          <div class="col-md-6">
+            <div class="product-info text-left pe-3">
+              <h4 class="fw-bold mb-2" id="productModalLabel">刺繡擦手巾 Hand Towel</h4>
+              <p class="price mb-3">NT$350</p>
+              <p class="mb-3">
+                以 Hotel PeP 旅館外觀為主題，立體刺繡描繪出粉紅外牆與綠色屋頂的招牌建築。柔軟的水晶絨布料搭配繡線勾勒細節，如同老飯店門口懸掛的迎賓徽章。
+              </p>
+              <p>
+                可懸掛於浴室、廚房或玄關，兼具實用與裝飾性，讓每一次洗手、擦拭，都成為入住 Hotel PeP 的優雅日常。
+              </p>
+              <p class="mb-1"><strong>尺寸：</strong> 約 17 × 18 cm（不含掛繩）</p>
+              <p class="mb-1"><strong>材質：</strong> 水晶絨拼接珊瑚絨 / 繡線刺繡 / 棉質掛繩</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+window.addEventListener('load', function () {
+  const overlay = document.getElementById('loading-overlay');
+  const MIN_DISPLAY_TIME = 1500; // 至少顯示 1 秒
+  const startTime = performance.now();
+
+  function hideOverlay() {
+    overlay.classList.add('loaded');
+    document.body.classList.remove('loading-locked');
+
+    overlay.addEventListener('transitionend', function onEnd(e) {
+      if (e.propertyName === 'opacity') {
+        overlay.remove();
+        overlay.removeEventListener('transitionend', onEnd);
+      }
+    });
+  }
+
+  const elapsed = performance.now() - startTime;
+  const remaining = Math.max(0, MIN_DISPLAY_TIME - elapsed);
+
+  // 確保至少顯示一秒再執行淡出
+  setTimeout(hideOverlay, remaining);
+});
+</script>
+  <script>
+document.addEventListener("DOMContentLoaded", () => {
+  // 找出所有 modal
+  document.querySelectorAll(".modal").forEach(modal => {
+    const mainImg = modal.querySelector(".mainProductImage"); // 改 class
+    const thumbs = modal.querySelectorAll(".product-thumb");
+    const loading = modal.querySelector(".image-loading");
+
+    thumbs.forEach(thumb => {
+      thumb.addEventListener("click", () => {
+        // 切換 active 樣式
+        thumbs.forEach(t => t.classList.remove("active"));
+        thumb.classList.add("active");
+
+        // 顯示 loading
+        if (loading) loading.classList.remove("d-none");
+
+        // 載入新圖
+        const newImg = new Image();
+        newImg.src = thumb.dataset.large;
+
+        newImg.onload = () => {
+          if (mainImg) mainImg.src = newImg.src;
+          if (loading) loading.classList.add("d-none");
+        };
+
+        newImg.onerror = () => {
+          if (loading) loading.classList.add("d-none");
+          alert("圖片載入失敗，請稍後再試。");
+        };
+      });
+    });
+  });
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const cards = document.querySelectorAll(".product-card");
+
+  cards.forEach(card => {
+    card.addEventListener("click", function (e) {
+      // 防止 Bootstrap modal 馬上打開
+      e.stopPropagation();
+      e.preventDefault();
+
+      // 如果已經翻轉一次 → 第二次才打開 modal
+      if (this.classList.contains("flipped")) {
+        this.classList.remove("flipped");
+        const targetModal = this.getAttribute("data-bs-target");
+        const modal = new bootstrap.Modal(document.querySelector(targetModal));
+        modal.show();
+      } else {
+        this.classList.add("flipped");
+      }
+    });
+  });
+});
+</script>
+<script>
+document.addEventListener('hidden.bs.modal', function () {
+  // 強制移除殘留的 backdrop
+  const backdrops = document.querySelectorAll('.modal-backdrop');
+  backdrops.forEach(backdrop => backdrop.remove());
+
+  // 同時移除 body 上可能殘留的樣式
+  document.body.classList.remove('modal-open');
+  document.body.style.overflow = '';
+  document.body.style.paddingRight = '';
+});
+document.addEventListener('show.bs.modal', function () {
+  document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+});
+</script>
+
+<script>
+window.addEventListener('load', () => {
+  // 建立 Lightbox 容器
+  const lightbox = document.createElement('div');
+  lightbox.id = 'lightbox';
+  lightbox.style.position = 'fixed';
+  lightbox.style.inset = 0;
+  lightbox.style.background = 'rgba(0,0,0,0.8)';
+  lightbox.style.display = 'flex';
+  lightbox.style.alignItems = 'center';
+  lightbox.style.justifyContent = 'center';
+  lightbox.style.zIndex = '3000';
+  lightbox.style.opacity = '0';
+  lightbox.style.visibility = 'hidden';
+  lightbox.style.transition = 'opacity 0.4s ease, visibility 0.4s ease';
+  lightbox.innerHTML = `
+    <img id="lightbox-img" src="" alt="lightbox image" 
+         style="max-width:90%; max-height:90%; border-radius:10px; opacity:0; transition:opacity 0.4s ease;">
+    <button id="lightbox-close" style="
+      position: absolute; top: 20px; right: 25px;
+      background: none; border: none; color: white;
+      font-size: 2rem; cursor: pointer; z-index: 3100;
+    ">&times;</button>
+    <button id="lightbox-prev" style="
+      position: absolute; left: 30px; color: white;
+      background: none; border: none; font-size: 3rem;
+      cursor: pointer; user-select: none; z-index: 3100;
+    ">&#10094;</button>
+    <button id="lightbox-next" style="
+      position: absolute; right: 30px; color: white;
+      background: none; border: none; font-size: 3rem;
+      cursor: pointer; user-select: none; z-index: 3100;
+    ">&#10095;</button>
+  `;
+  document.body.appendChild(lightbox);
+
+  const lightboxImg = document.getElementById('lightbox-img');
+  const btnClose = document.getElementById('lightbox-close');
+  const btnPrev = document.getElementById('lightbox-prev');
+  const btnNext = document.getElementById('lightbox-next');
+
+  let currentIndex = 0;
+  let currentImages = [];
+
+  // 開啟 lightbox
+  document.querySelectorAll('.modal').forEach(modal => {
+    const mainImg = modal.querySelector('.mainProductImage');
+    if (!mainImg) return;
+
+    mainImg.addEventListener('click', () => {
+      // 取出當前 modal 內所有小圖的 data-large
+      const thumbs = modal.querySelectorAll('.product-thumb');
+      currentImages = Array.from(thumbs).map(t => t.dataset.large);
+      currentIndex = Math.max(currentImages.indexOf(mainImg.src), 0);
+      showLightbox(currentImages[currentIndex]);
+    });
+  });
+
+  // 顯示 Lightbox
+  function showLightbox(src) {
+    lightboxImg.src = src;
+    lightbox.style.visibility = 'visible';
+    lightbox.style.opacity = '1';
+    lightboxImg.style.opacity = '0';
+
+    lightboxImg.onload = () => {
+      setTimeout(() => { lightboxImg.style.opacity = '1'; }, 50);
+    };
+  }
+
+  // 關閉 Lightbox
+  function closeLightbox() {
+    lightbox.style.opacity = '0';
+    lightbox.style.visibility = 'hidden';
+  }
+
+  // 切換圖片
+  function showNext() {
+    if (!currentImages.length) return;
+    currentIndex = (currentIndex + 1) % currentImages.length;
+    fadeImage(currentImages[currentIndex]);
+  }
+
+  function showPrev() {
+    if (!currentImages.length) return;
+    currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+    fadeImage(currentImages[currentIndex]);
+  }
+
+  // 淡入淡出切換
+  function fadeImage(src) {
+    lightboxImg.style.opacity = '0';
+    setTimeout(() => {
+      lightboxImg.src = src;
+      lightboxImg.onload = () => { lightboxImg.style.opacity = '1'; };
+    }, 300);
+  }
+
+  // 綁定事件
+  btnClose.addEventListener('click', closeLightbox);
+  btnNext.addEventListener('click', showNext);
+  btnPrev.addEventListener('click', showPrev);
+
+  // 點擊背景關閉
+  lightbox.addEventListener('click', e => {
+    if (e.target === lightbox) closeLightbox();
+  });
+
+  // 鍵盤操作
+  document.addEventListener('keydown', e => {
+    if (lightbox.style.visibility === 'visible') {
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowRight') showNext();
+      if (e.key === 'ArrowLeft') showPrev();
+    }
+  });
+});
+</script>
+
+
+</body>
+</html>
