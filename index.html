@@ -4,7 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Hotel PeP | Papy et Petit-fils 架空飯店企劃特設網頁</title>
-        <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
+  <meta name="description" vmid="description" content="一份來自老旅館的商品菜單。請自由挑選屬於你的房間小物，無論是午後茶系列、旅宿配件，或象徵入住儀式的經典鑰匙吊飾，每一件都是旅館裡遺留下的小記憶。" data-vue-meta="1">
+  <meta property="og:type" content="website">
+  <meta property="og:description" vmid="og:description" content="一份來自老旅館的商品菜單。請自由挑選屬於你的入住小物，無論是旅宿配件，午茶系列、或象徵入住儀式的經典鑰匙吊飾，每一件都是旅館裡遺留下的小記憶。" data-vue-meta="1">
+  <meta property="og:url" content="https://hotelpep.art/">
+  <meta property="og:image" content="assets/img/og-image.png">
+
+  <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
+  <meta property="og:site_name" content="Clibo 同人委託平台">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
@@ -137,6 +144,7 @@
     .chest {
         max-width: 850px;
         margin: 0px auto;
+        position: relative;
     }
 
     .chest-top {
@@ -158,6 +166,7 @@
         background-repeat: no-repeat;
         background-position: center bottom;
         background-size: 100%;
+        padding-bottom: 10%;
     }
 
     .number {
@@ -386,6 +395,33 @@
       }
     }
 
+    @media (max-width: 376px) {
+        .key-front img {
+            max-width: 200px !important;
+        }
+        .key-back-img {
+            padding-bottom: 30px;
+        }
+        .page-decor-left {
+            left: -40px;
+        }
+        .page-decor-right {
+            right: -40px;
+        }
+        .page-decor-left, .page-decor-right, .star-decor {
+            display: block !important
+        }
+        .star-decor-left {
+            left: -65px;
+        }
+        .star-decor-right {
+            right: -65px;
+        }
+        .chest-bottom {
+            padding-bottom: 6%;
+        }
+    }
+
 
     @media (max-width: 1025px) {
       .page-decor-left,
@@ -447,11 +483,11 @@
   <main class="container-fluid">
 
     <div class="chest text-center">
-      <div class="chest-top row g-3 px-5 mx-5" style="padding-top: 36%;">
+      <div class="chest-top row g-3 px-0 px-md-5 mx-0 mx-md-5" style="padding-top: 36%;">
         <div class="col-md-4 p-3">
         </div>
       </div>
-      <div class="row chest-mid g-3 px-5 mx-5 d-flex flex-wrap justify-content-center">
+      <div class="row chest-mid g-3 px-0 px-md-5 mx-0 mx-md-5 d-flex flex-wrap justify-content-center">
         <div class="col-md-4 px-3 pb-3 pt-0 cursor-pointer product-card">
             <div class="key-back key-back-img">
                 <div class="key-wrap">
@@ -660,7 +696,7 @@
             </div>
         </div>
       </div>
-      <div class="chest-bottom row g-3 px-5 mx-5" style="padding-bottom: 10%;">
+      <div class="chest-bottom row g-3 px-0 px-md-5 mx-0 mx-md-5">
         <div class="col-md-4 p-3">
         </div>
       </div>
@@ -1308,7 +1344,7 @@
   <script>
 window.addEventListener('load', function () {
   const overlay = document.getElementById('loading-overlay');
-  const MIN_DISPLAY_TIME = 1500; // 至少顯示 1 秒
+  const MIN_DISPLAY_TIME = 2000; // 至少顯示 N 秒
   const startTime = performance.now();
 
   function hideOverlay() {
