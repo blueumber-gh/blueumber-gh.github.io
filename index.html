@@ -1442,12 +1442,12 @@ document.addEventListener('show.bs.modal', function () {
 
 <script>
 window.addEventListener('load', () => {
-  // 建立 Lightbox 容器
+  // === 建立 Lightbox 結構 ===
   const lightbox = document.createElement('div');
   lightbox.id = 'lightbox';
   lightbox.style.position = 'fixed';
   lightbox.style.inset = 0;
-  lightbox.style.background = 'rgba(0,0,0,0.8)';
+  lightbox.style.background = 'rgba(0,0,0,0.9)';
   lightbox.style.display = 'flex';
   lightbox.style.alignItems = 'center';
   lightbox.style.justifyContent = 'center';
@@ -1456,6 +1456,16 @@ window.addEventListener('load', () => {
   lightbox.style.visibility = 'hidden';
   lightbox.style.transition = 'opacity 0.4s ease, visibility 0.4s ease';
   lightbox.innerHTML = `
+    <div id="lightbox-spinner" style="
+      position: absolute; 
+      top: 50%; left: 50%; transform: translate(-50%, -50%);
+      display: none;
+      z-index: 3200;
+    ">
+      <div class="spinner-border text-light" role="status" style="width:3rem; height:3rem;">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
     <img id="lightbox-img" src="" alt="lightbox image" 
          style="max-width:90%; max-height:90%; border-radius:10px; opacity:0; transition:opacity 0.4s ease;">
     <button id="lightbox-close" style="
@@ -1480,17 +1490,17 @@ window.addEventListener('load', () => {
   const btnClose = document.getElementById('lightbox-close');
   const btnPrev = document.getElementById('lightbox-prev');
   const btnNext = document.getElementById('lightbox-next');
+  const spinner = document.getElementById('lightbox-spinner');
 
   let currentIndex = 0;
   let currentImages = [];
 
-  // 開啟 lightbox
+  // === 綁定 modal 內圖片點擊事件 ===
   document.querySelectorAll('.modal').forEach(modal => {
     const mainImg = modal.querySelector('.mainProductImage');
     if (!mainImg) return;
 
     mainImg.addEventListener('click', () => {
-      // 取出當前 modal 內所有小圖的 data-large
       const thumbs = modal.querySelectorAll('.product-thumb');
       currentImages = Array.from(thumbs).map(t => t.dataset.large);
       currentIndex = Math.max(currentImages.indexOf(mainImg.src), 0);
@@ -1498,25 +1508,35 @@ window.addEventListener('load', () => {
     });
   });
 
-  // 顯示 Lightbox
+  // === 顯示 Lightbox ===
   function showLightbox(src) {
-    lightboxImg.src = src;
+    spinner.style.display = 'block'; // 顯示 loading
+    lightboxImg.style.opacity = '0';
+    lightboxImg.src = '';
+
     lightbox.style.visibility = 'visible';
     lightbox.style.opacity = '1';
-    lightboxImg.style.opacity = '0';
 
-    lightboxImg.onload = () => {
+    const img = new Image();
+    img.src = src;
+    img.onload = () => {
+      lightboxImg.src = img.src;
+      spinner.style.display = 'none';
       setTimeout(() => { lightboxImg.style.opacity = '1'; }, 50);
+    };
+    img.onerror = () => {
+      spinner.style.display = 'none';
+      alert('圖片載入失敗');
     };
   }
 
-  // 關閉 Lightbox
+  // === 關閉 Lightbox ===
   function closeLightbox() {
     lightbox.style.opacity = '0';
     lightbox.style.visibility = 'hidden';
   }
 
-  // 切換圖片
+  // === 切換圖片 ===
   function showNext() {
     if (!currentImages.length) return;
     currentIndex = (currentIndex + 1) % currentImages.length;
@@ -1529,21 +1549,29 @@ window.addEventListener('load', () => {
     fadeImage(currentImages[currentIndex]);
   }
 
-  // 淡入淡出切換
+  // === 淡入淡出切換（含 loading） ===
   function fadeImage(src) {
+    spinner.style.display = 'block';
     lightboxImg.style.opacity = '0';
-    setTimeout(() => {
-      lightboxImg.src = src;
-      lightboxImg.onload = () => { lightboxImg.style.opacity = '1'; };
-    }, 300);
+    const img = new Image();
+    img.src = src;
+    img.onload = () => {
+      lightboxImg.src = img.src;
+      spinner.style.display = 'none';
+      setTimeout(() => { lightboxImg.style.opacity = '1'; }, 50);
+    };
+    img.onerror = () => {
+      spinner.style.display = 'none';
+      alert('圖片載入失敗');
+    };
   }
 
-  // 綁定事件
+  // === 事件綁定 ===
   btnClose.addEventListener('click', closeLightbox);
   btnNext.addEventListener('click', showNext);
   btnPrev.addEventListener('click', showPrev);
 
-  // 點擊背景關閉
+  // 點背景關閉
   lightbox.addEventListener('click', e => {
     if (e.target === lightbox) closeLightbox();
   });
@@ -1558,6 +1586,7 @@ window.addEventListener('load', () => {
   });
 });
 </script>
+
 
 
 </body>
