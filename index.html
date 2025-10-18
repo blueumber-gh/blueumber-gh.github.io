@@ -18,431 +18,7 @@
   <!-- Bootstrap 5 CSS (CDN) -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-  <style>
-    body {
-      color: #AC9E50;
-    }
-    .modal {
-        color: #666;
-    }
-    .cursor-pointer {
-        cursor: pointer;
-    }
-
-    #loading-overlay {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #374039;
-      background: linear-gradient(180deg,rgba(55, 64, 57, 1) 0%, rgba(56, 94, 61, 1) 100%);
-      z-index: 1050;
-      transition: opacity 300ms ease, visibility 300ms ease;
-      opacity: 1;
-      visibility: visible;
-      overflow: hidden;
-    }
-
-    .loading-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      overflow: hidden;
-    }
-
-    #loading-overlay.loaded {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-
-    .loading-inner {
-      text-align: center;
-      position: relative;
-      z-index: 2;
-    }
-
-    .loading-text {
-      margin-top: 0.75rem;
-      font-size: 1rem;
-      font-family: "Cormorant Garamond", serif;
-      font-optical-sizing: auto;
-      font-weight: 700;
-      font-style: italic;
-    }
-
-    .text-cormorant {
-        font-family: "Cormorant Garamond", serif;
-    }
-
-    body.loading-locked {
-      overflow: hidden;
-    }
-
-    .loading-decor-left,
-    .loading-decor-right {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: auto;
-      height: 100%;
-      z-index: 1;
-    }
-
-    .loading-decor-left { left: 0; }
-    .loading-decor-right { right: 0; }
-
-    .loading-decor-left img,
-    .loading-decor-right img {
-      height: 100%;
-      width: auto;
-      object-fit: contain;
-      display: block;
-    }
-
-    .loading-logo {
-      width: 200px;
-      height: auto;
-      z-index: 10000;
-    }
-
-    .page-decor-left,
-    .page-decor-right {
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      width: auto;
-      height: 100%;
-      z-index: 100;
-    }
-
-    .page-decor-left { left: 0; }
-    .page-decor-right { right: 0; }
-
-    .page-decor-left img,
-    .page-decor-right img {
-      height: 100%;
-      width: auto;
-      object-fit: contain;
-      display: block;
-    }
-
-    .container-fluid {
-      background: #374039;
-      background: linear-gradient(180deg,rgba(55, 64, 57, 1) 0%, rgba(56, 94, 61, 1) 100%);
-
-    }
-
-    .chest {
-        max-width: 850px;
-        margin: 0px auto;
-        position: relative;
-    }
-
-    .chest-top {
-        background-image: url("assets/img/chest-back.png");
-        background-repeat: no-repeat;
-        background-position: center 20px;
-        background-size: 100%;
-    }
-
-    .chest-mid {
-        background-image: url("assets/img/chest-mid.png");
-        background-repeat: repeat-y;
-        background-position: center 20px;
-        background-size: 100%;
-    }
-
-    .chest-bottom {
-        background-image: url("assets/img/chest-footer.png");
-        background-repeat: no-repeat;
-        background-position: center bottom;
-        background-size: 100%;
-        padding-bottom: 10%;
-    }
-
-    .number {
-        font-family: "Cormorant Garamond", serif;
-        font-optical-sizing: auto;
-        font-weight: bolder;
-        font-style: italic;
-        font-size: 3.5rem;
-        line-height: 3.2rem;
-    }
-
-    .product-name {
-        font-weight: bolder;
-        font-size: 1.1rem;
-    }
-
-    .price {
-        font-weight: bolder;
-        font-style: italic;
-        font-size: 1rem;
-        margin-top: 0.5rem;
-        margin-bottom: 0.5rem;
-        line-height: 1rem;
-    }
-
-    .modal .price {
-        color: #AC9E50;
-        font-size: 1.2rem;
-        line-height: 1.5rem;
-
-    }
-
-    /* =======================
-       🔹 翻轉卡片效果
-       ======================= */
-    .key-back {
-      perspective: 1000px; /* 建立3D空間 */
-    }
-
-
-    .key-back-img {
-        background-image: url("assets/img/key-back.png");
-        background-repeat: no-repeat;
-        background-position: center top;
-        background-size: 79%;
-    }
-
-    .key-wrap {
-      position: relative;
-      width: 100%;
-      transform-style: preserve-3d;
-      transition: transform 0.8s ease;
-      height: 200px;
-    }
-
-    /*.product-card:hover .key-wrap {
-      transform: rotateY(180deg);
-    }*/
-    .product-card.flipped .key-wrap {
-      transform: rotateY(180deg);
-    }
-
-    .key-front, .key-backside {
-      position: absolute;
-      width: 100%;
-      backface-visibility: hidden; /* 隱藏背面 */
-    }
-
-    .key-front {
-      z-index: 2;
-      transform: rotateY(0deg);
-    }
-
-    .key-backside {
-      transform: rotateY(180deg);
-    }
-
-    /* 🔸 背面商品圖樣式 */
-    .diamond-wrapper {
-      width: 100px;
-      height: 100px;
-      overflow: hidden;
-      transform: rotate(45deg); /* 外層旋轉 45 度 */
-      border: 3px solid #AC9E50;
-      margin: 50px auto 50px auto;
-    }
-
-    .product-img {
-      width: 150%;
-      height: 150%;
-      object-fit: cover;
-      transform: rotate(-45deg); /* 內層反向旋轉讓圖片保持直立 */
-      margin-top: -22%;
-      margin-left: -22%;
-    }
-
-    .product-thumb {
-      cursor: pointer;
-      opacity: 0.7;
-      transition: all 0.2s ease;
-    }
-
-    .product-thumb:hover {
-      opacity: 1;
-      transform: scale(1.05);
-    }
-
-    .product-thumb.active {
-      border: 2px solid #AC9E50;
-      opacity: 1;
-    }
-
-    /* 裝飾區塊基礎設定 */
-    .star-decor {
-      position: fixed;
-      top: 0;
-      z-index: 200;
-      display: flex;
-      flex-direction: row;
-      gap: 20px;
-      pointer-events: none;
-    }
-
-    /* 左右位置 */
-    .star-decor-left {
-      left: 50px;
-    }
-
-    .star-decor-right {
-      right: 50px;
-      flex-direction: row-reverse;
-    }
-
-    /* 每條鍊條 */
-    .chain {
-      width: 60px;
-      height: auto;
-      transform-origin: top center; /* 以鍊條上端為旋轉軸 */
-      animation-timing-function: ease-in-out;
-      animation-iteration-count: infinite;
-      animation: swingRotate 4s ease-in-out infinite;
-      backface-visibility: visible;
-  transform-style: preserve-3d;
-  filter: brightness(0.9);
-    }
-
-    /* 每條不同的動畫與速度 */
-    .chain-1 {
-      animation: sway-left 4s infinite alternate, spin-left 8s ease-in-out infinite;
-      position: relative;
-      top: -80px;
-    }
-    .chain-2 {
-      animation: sway-right 5.5s infinite alternate, spin-right 10s ease-in-out infinite;
-      position: relative;
-      top: -10px;
-    }
-    .chain-3 {
-      animation: sway-left 6.5s infinite alternate, spin-left 9s ease-in-out infinite;
-      position: relative;
-      top: -100px;
-    }
-    .chain-4 {
-      animation: sway-right 5s infinite alternate, spin-left 7s ease-in-out infinite;
-      position: relative;
-      top: -100px;
-    }
-    .chain-5 {
-      animation: sway-left 7s infinite alternate, spin-right 11s ease-in-out infinite;
-      position: relative;
-      top: -30px;
-    }
-    .chain-6 {
-      animation: sway-right 4.5s infinite alternate, spin-left 12s ease-in-out infinite;
-      position: relative;
-      top: -75px;
-    }
-
-    .mainProductImage {
-        cursor: pointer;
-    }
-
-    @keyframes spin-left {
-      0%   { transform: rotateY(1deg); }
-      100% { transform: rotateY(359deg); }
-    }
-
-    @keyframes spin-right {
-      0%   { transform: rotateY(1deg); }
-      100% { transform: rotateY(-359deg); }
-    }
-
-    /* 定義左右擺動動畫 */
-    @keyframes sway-left {
-      0% { transform: rotate(2deg); }
-      100% { transform: rotate(-4deg); }
-    }
-
-    @keyframes sway-right {
-      0% { transform: rotate(-3deg); }
-      100% { transform: rotate(3deg); }
-    }
-
-    @keyframes swingRotate {
-      0% {
-        transform: rotate(5deg) rotateY(0deg);
-      }
-      25% {
-        transform: rotate(0deg) rotateY(5deg);
-      }
-      50% {
-        transform: rotate(-5deg) rotateY(0deg);
-      }
-      75% {
-        transform: rotate(0deg) rotateY(-5deg);
-      }
-      100% {
-        transform: rotate(5deg) rotateY(0deg);
-      }
-    }
-
-    /* RWD：小螢幕時隱藏 */
-    @media (max-width: 768px) {
-      .star-decor {
-        display: none;
-      }
-    }
-
-    @media (max-width: 376px) {
-        .key-front img {
-            max-width: 200px !important;
-        }
-        .key-back-img {
-            padding-bottom: 30px;
-        }
-        .page-decor-left {
-            left: -40px;
-        }
-        .page-decor-right {
-            right: -40px;
-        }
-        .page-decor-left, .page-decor-right, .star-decor {
-            display: block !important
-        }
-        .star-decor-left {
-            left: -65px;
-        }
-        .star-decor-right {
-            right: -65px;
-        }
-        .chest-bottom {
-            padding-bottom: 6%;
-        }
-    }
-
-
-    @media (max-width: 1025px) {
-      .page-decor-left,
-      .page-decor-right {
-        display: none;
-      }
-    }
-
-    @media (hover: hover) {
-      .product-card:hover .key-wrap {
-        transform: rotateY(180deg);
-      }
-}
-
-    @media (max-width: 767.98px) {
-      .loading-decor-left,
-      .loading-decor-right {
-        display: none;
-      }
-    }
-  </style>
+  <link href="css/styles.css?v=20251018" rel="stylesheet" />
 </head>
 <body class="loading-locked">
 
@@ -483,7 +59,7 @@
   <main class="container-fluid">
 
     <div class="chest text-center">
-      <div class="chest-top row g-3 px-0 px-md-5 mx-0 mx-md-5" style="padding-top: 36%;">
+      <div class="chest-top row g-3 px-0 px-md-5 mx-0 mx-md-5">
         <div class="col-md-4 p-3">
         </div>
       </div>
@@ -771,7 +347,7 @@
           <div class="col-md-6">
             <div class="product-info text-left pe-3">
               <h4 class="fw-bold mb-2" id="productModalLabel">絨布刺繡托特袋 Velvet Tote Bag</h4>
-              <p class="price mb-3">NT$350</p>
+              <p class="price mb-3">NT$330</p>
               <p>
                 <span class="fw-bold fst-italic">✦ Special Price ✦</span>
                 <br>刺繡托特袋 × 飯店鑰匙吊飾 組合價 <span class="fw-bold fst-italic text-danger">NT$520</span>
@@ -854,7 +430,7 @@
           <div class="col-md-6">
             <div class="product-info text-left pe-3">
               <h4 class="fw-bold mb-2" id="productModalLabel">飯店鑰匙壓克力吊飾 Acrylic Key Charm</h4>
-              <p class="price mb-3">NT$350</p>
+              <p class="price mb-3">NT$260</p>
               <p>
                 <span class="fw-bold fst-italic">✦ Special Price ✦</span>
                 <br>刺繡托特袋 × 飯店鑰匙吊飾 組合價 <span class="fw-bold fst-italic text-danger">NT$520</span>
@@ -927,7 +503,7 @@
           <div class="col-md-6">
             <div class="product-info text-left pe-3">
               <h4 class="fw-bold mb-2" id="productModalLabel">壓克力流蘇耳環 Acrylic Tassel Earrings</h4>
-              <p class="price mb-3">NT$350</p>
+              <p class="price mb-3">NT$380</p>
               <p class="mb-3">
                 以 Hotel PeP 經典徽章為設計主軸，搭配閃耀細緻光澤的壓克力吊墜與金色流蘇，呈現如老飯店吊燈般的柔亮質感。
               </p>
@@ -993,7 +569,7 @@
           <div class="col-md-6">
             <div class="product-info text-left pe-3">
               <h4 class="fw-bold mb-2" id="productModalLabel">皮革行李吊牌 Leather Luggage Tag</h4>
-              <p class="price mb-3">NT$350</p>
+              <p class="price mb-3">NT$200</p>
               <p class="mb-3">
                 靈感源自老飯店櫃台的行李寄存札，以霧棕皮革搭配金色 Hotel PeP 字樣燙印，卡套內附印有插畫式入住資料卡，讓每一次啟程都像領取一張飯店房卡般充滿儀式感。
               </p>
@@ -1063,7 +639,7 @@
           <div class="col-md-6">
             <div class="product-info text-left pe-3">
               <h4 class="fw-bold mb-2" id="productModalLabel">飲料提袋套組 Drink Tote Set</h4>
-              <p class="price mb-3">NT$350</p>
+              <p class="price mb-3">NT$380</p>
               <p class="mb-3">
                 以「Landlord’s Afternoon Tea」為主題設計，描繪爺爺於午後時光享用茶點的溫暖情景。
               </p>
@@ -1129,7 +705,7 @@
           <div class="col-md-6">
             <div class="product-info text-left pe-3">
               <h4 class="fw-bold mb-2" id="productModalLabel">木製夾子 Wooden Mini Sign Set</h4>
-              <p class="mb-3"><span class="price">NT$350</span> / 每款</p>
+              <p class="mb-3"><span class="price">NT$150</span> / 每款</p>
               <p class="mb-3">
                 以老旅館大廳的入住與餐廳告示牌為靈感，縮小成手掌大小的木製擺飾，再現「Check in」與「Today’s Menu」兩款經典場景。雙層木質夾子，表面以印刷上色，保留原木紋理，在光影下呈現溫潤質感，讓人彷彿回到 Hotel PeP 的櫃台與餐室。
               </p>
@@ -1195,7 +771,7 @@
           <div class="col-md-6">
             <div class="product-info text-left pe-3">
               <h4 class="fw-bold mb-2" id="productModalLabel">吸水軟杯墊組 Soft Coaster Set</h4>
-              <p class="price mb-3">NT$350</p>
+              <p class="price mb-3">NT$150</p>
               <p class="mb-3">
                 以 Hotel PeP 櫃台場景為主題設計，Lobby Grandpa 與 Lobby Boy 兩款插畫，重現老旅館中迎賓的日常一幕，每組含兩款杯墊各一。
               </p>
@@ -1259,7 +835,7 @@
           <div class="col-md-6">
             <div class="product-info text-left pe-3">
               <h4 class="fw-bold mb-2" id="productModalLabel">鐵盒貼紙組 Tin Box Sticker Set</h4>
-              <p class="price mb-3">NT$350</p>
+              <p class="price mb-3">NT$180</p>
               <p class="mb-3">
                 以 Hotel PeP 旅館內的日常場景為主題，將櫃台、行李寄放處、餐廳、房務人員等細節化為插畫貼紙，適合筆記本、或手帳裝飾。
               </p>
@@ -1323,7 +899,7 @@
           <div class="col-md-6">
             <div class="product-info text-left pe-3">
               <h4 class="fw-bold mb-2" id="productModalLabel">刺繡擦手巾 Hand Towel</h4>
-              <p class="price mb-3">NT$350</p>
+              <p class="price mb-3">NT$320</p>
               <p class="mb-3">
                 以 Hotel PeP 旅館外觀為主題，立體刺繡描繪出粉紅外牆與綠色屋頂的招牌建築。柔軟的水晶絨布料搭配繡線勾勒細節，如同老飯店門口懸掛的迎賓徽章。
               </p>
