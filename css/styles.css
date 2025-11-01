@@ -9,6 +9,15 @@
         cursor: pointer;
     }
 
+    .btn-outline-primary {
+      border: 1px solid #AC9E50 !important;
+      color: #AC9E50 !important;
+    }
+    .btn-outline-primary:hover {
+      background-color: #AC9E50 !important;
+      color: #71644E !important;
+    }
+
     #loading-overlay {
       position: fixed;
       inset: 0;
@@ -404,6 +413,13 @@
         .chest-bottom {
             padding-bottom: 6%;
         }
+    }
+
+
+    @media (min-width: 1026px) {
+      .w-lg-60 {
+        width: 60% !important;
+      }
     }
 
 
