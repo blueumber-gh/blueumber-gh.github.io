@@ -54,6 +54,26 @@ function waitForImage(img) {
   });
 }
 
+// 等待畫面完成渲染
+function waitForRender() {
+  return new Promise(resolve => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(resolve);
+    });
+  });
+}
+
+// 等待截圖區塊內所有圖片完成載入
+async function waitForStoryImages() {
+  const story = document.getElementById('guest-story');
+
+  const images = Array.from(story.querySelectorAll('img'));
+
+  await Promise.all(
+    images.map(img => waitForImage(img))
+  );
+}
+
 // 讀取住客資料
 async function loadGuest() {
 
@@ -147,29 +167,39 @@ async function loadGuest() {
   }
 
   try {
-    await waitForImage(guestRoomImage);
+    // 等待收據所有圖片載入完成
+    await waitForStoryImages();
 
+    // 等待背景及文字真正完成畫面渲染
+    await waitForRender();
+
+    // 啟用下載功能
     downloadButton.disabled = false;
 
-    // 背景預先準備分享圖片
+    // 預先產生完整分享圖片
     try {
       preparedShareFile = await prepareShareImage();
-      shareButton.disabled = false;
+
+      // 確認分享檔案確實產生成功
+      if (preparedShareFile && preparedShareFile.size > 0) {
+        shareButton.disabled = false;
+      }
+
     } catch (error) {
       console.error('Share image preparation failed:', error);
+
+      downloadMessage.textContent =
+        '分享圖片準備失敗，仍可嘗試下載房卡。';
     }
 
   } catch (error) {
-    console.error(
-      'Room image failed:',
-      guestRoomImage.src,
-      error
-    );
+    console.error('Guest card images failed:', error);
 
     downloadMessage.textContent =
-      'ROOM IMAGE COULD NOT BE LOADED.';
+      '房卡圖片載入失敗，請重新整理頁面。';
 
     downloadButton.disabled = true;
+    shareButton.disabled = true;
   }
 }
 
@@ -215,27 +245,39 @@ downloadButton.addEventListener('click', async () => {
 });
 
 shareButton.addEventListener('click', async () => {
-  if (!preparedShareFile) return;
 
+  // 必須先有完整的分享圖片
+  if (!preparedShareFile) {
+    downloadMessage.textContent =
+      '房卡圖片尚未準備完成，請稍後再試。';
+    return;
+  }
+
+  // 檢查瀏覽器是否支援分享圖片
   if (
     !navigator.share ||
     !navigator.canShare ||
     !navigator.canShare({ files: [preparedShareFile] })
   ) {
     downloadMessage.textContent =
-      '很抱歉您的瀏覽器不支援分享，請直接下載圖片';
+      '您的瀏覽器不支援直接分享，請使用下載房卡功能。';
     return;
   }
 
   try {
+    downloadMessage.textContent = '';
+
+    // 直接分享預先產生的圖片
     await navigator.share({
       files: [preparedShareFile]
     });
+
   } catch (error) {
     if (error.name !== 'AbortError') {
       console.error('Share failed:', error);
+
       downloadMessage.textContent =
-        '很抱歉分享失敗了，建議直接下載圖片或重試一次';
+        '分享失敗，請下載房卡後再分享到限時動態。';
     }
   }
 });
@@ -278,6 +320,8 @@ async function generateGuestCardBlob() {
   const story = document.getElementById('guest-story');
 
   const fontEmbedCSS = await prepareFontsForImage();
+  await waitForStoryImages();
+  await waitForRender();
 
   const blob = await htmlToImage.toBlob(story, {
     pixelRatio: 1,
