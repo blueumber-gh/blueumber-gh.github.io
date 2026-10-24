@@ -143,19 +143,26 @@ async function loadGuest() {
   guestRoomImage.alt = `ROOM ${room}`;
 
   // 依照房號自動切換截圖背景
-  const guestStory = document.getElementById('guest-story');
+  const guestBackground =
+    document.getElementById('guest-background');
 
-  // 先預載對應房號的背景圖片
-  const backgroundUrl = `../assets/img/share-bg-${room}.png`;
+  const backgroundUrl =
+    `../assets/img/share-bg-${room}.png`;
 
-  const backgroundImage = new Image();
-  backgroundImage.src = backgroundUrl;
+  if (!guestBackground) {
+    console.error('找不到 guest-background 圖片元素');
+
+    downloadMessage.textContent =
+      '背景圖片設定錯誤，請重新整理頁面。';
+
+    return;
+  }
+
+  // 設定對應房號的背景圖片
+  guestBackground.src = backgroundUrl;
 
   try {
-    await waitForImage(backgroundImage);
-
-    guestStory.style.backgroundImage =
-      `url("${backgroundUrl}")`;
+    await waitForImage(guestBackground);
 
   } catch (error) {
     console.error('Background image failed:', error);
@@ -189,14 +196,14 @@ async function loadGuest() {
       console.error('Share image preparation failed:', error);
 
       downloadMessage.textContent =
-        '分享圖片準備失敗，仍可嘗試下載房卡。';
+        '分享圖片準備失敗，仍可嘗試下載。';
     }
 
   } catch (error) {
     console.error('Guest card images failed:', error);
 
     downloadMessage.textContent =
-      '房卡圖片載入失敗，請重新整理頁面。';
+      '入住紀錄圖片載入失敗，請重新整理頁面。';
 
     downloadButton.disabled = true;
     shareButton.disabled = true;
@@ -209,7 +216,7 @@ downloadButton.addEventListener('click', async () => {
   if (!currentGuest) return;
 
   downloadButton.disabled = true;
-  downloadButton.textContent = '房卡準備中...';
+  downloadButton.textContent = '入住紀錄準備中...';
   downloadMessage.textContent = '';
 
   try {
@@ -240,7 +247,7 @@ downloadButton.addEventListener('click', async () => {
   } finally {
     downloadButton.disabled = false;
     downloadButton.innerHTML =
-      '<i class="bi bi-download" aria-hidden="true"></i> 下載你的房卡';
+      '<i class="bi bi-download" aria-hidden="true"></i> 下載你的入住紀錄';
   }
 });
 
@@ -249,7 +256,7 @@ shareButton.addEventListener('click', async () => {
   // 必須先有完整的分享圖片
   if (!preparedShareFile) {
     downloadMessage.textContent =
-      '房卡圖片尚未準備完成，請稍後再試。';
+      '入住紀錄圖片尚未準備完成，請稍後再試。';
     return;
   }
 
@@ -260,7 +267,7 @@ shareButton.addEventListener('click', async () => {
     !navigator.canShare({ files: [preparedShareFile] })
   ) {
     downloadMessage.textContent =
-      '您的瀏覽器不支援直接分享，請使用下載房卡功能。';
+      '您的瀏覽器不支援直接分享，請使用下載功能。';
     return;
   }
 
@@ -277,7 +284,7 @@ shareButton.addEventListener('click', async () => {
       console.error('Share failed:', error);
 
       downloadMessage.textContent =
-        '分享失敗，請下載房卡後再分享到限時動態。';
+        '分享失敗，請下載入住紀錄後再手動分享。';
     }
   }
 });
