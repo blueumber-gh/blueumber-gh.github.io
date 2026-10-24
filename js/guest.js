@@ -1,81 +1,135 @@
 const SUPABASE_URL = 'https://lprjekvgodeiourtirsx.supabase.co/';
 const SUPABASE_KEY = 'sb_publishable_R7fwGex2kURTdgAkG8RhuQ_sPKHuDiI';
 
-const supabaseClient = supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
-
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const params = new URLSearchParams(window.location.search);
 const guestId = params.get('id');
 
-const guestCard = document.getElementById('guest-card');
 const guestNumber = document.getElementById('guest-number');
 const guestNickname = document.getElementById('guest-nickname');
 const guestRoomImage = document.getElementById('guest-room-image');
-
-const downloadButton =
-  document.getElementById('download-guest-card');
-
-const downloadMessage =
-  document.getElementById('download-message');
+const guestBackground = document.getElementById('guest-background');
+const guestStory = document.getElementById('guest-story');
+const downloadButton = document.getElementById('download-guest-card');
+const shareButton = document.getElementById('share-guest-card');
+const downloadMessage = document.getElementById('download-message');
 
 let currentGuest = null;
-
-const shareButton =
-  document.getElementById('share-guest-card');
-
-// 先準備好圖片，避免按分享時等待產圖
 let preparedShareFile = null;
+let cachedFontEmbedCSS = null;
 
-async function prepareShareImage() {
-  const blob = await generateGuestCardBlob();
+function setMessage(message) {
+  downloadMessage.textContent = message;
+}
 
-  return new File(
+function waitForImage(img) {
+  return new Promise((resolve, reject) => {
+    if (img.complete) {
+      return img.naturalWidth > 0 ? resolve() : reject(new Error(`Image failed: ${img.src}`));
+    }
+    img.addEventListener('load', () => resolve(), { once: true });
+    img.addEventListener('error', () => reject(new Error(`Image failed: ${img.src}`)), { once: true });
+  });
+}
+
+function waitForRender() {
+  return new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+}
+
+async function waitForStoryImages() {
+  const images = Array.from(guestStory.querySelectorAll('img'));
+  await Promise.all(images.map(async img => {
+    await waitForImage(img);
+    // decode() 等待圖片解碼完成；不支援的瀏覽器使用 load 結果即可。
+    if (typeof img.decode === 'function') {
+      try {
+        await img.decode();
+      } catch (error) {
+        console.warn('Image decode fallback:', img.src, error);
+      }
+    }
+  }));
+}
+
+async function prepareFontsForImage() {
+  const fonts = [
+    '16px "PeP Special Elite"',
+    '24px "PeP Oooh Baby"',
+    '24px "PeP Cormorant"',
+    '20px "PeP WenKai"'
+  ];
+
+  const results = await Promise.allSettled(fonts.map(font => document.fonts.load(font)));
+
+  results.forEach((result, index) => {
+    if (result.status === 'rejected') {
+      console.warn('字體載入失敗：', fonts[index], result.reason);
+    }
+  });
+
+  await document.fonts.ready;
+
+  if (cachedFontEmbedCSS === null) {
+    cachedFontEmbedCSS = await htmlToImage.getFontEmbedCSS(guestStory);
+  }
+
+  return cachedFontEmbedCSS;
+}
+
+async function generateGuestCardBlob(fontEmbedCSS) {
+  await waitForStoryImages();
+  await waitForRender();
+
+  const blob = await htmlToImage.toBlob(guestStory, {
+    pixelRatio: 1,
+    backgroundColor: '#f7ecd4',
+    canvasWidth: 1080,
+    canvasHeight: 1920,
+    fontEmbedCSS,
+    cacheBust: true
+  });
+
+  if (!blob || blob.size === 0) {
+    throw new Error('Guest card image generation failed');
+  }
+
+  return blob;
+}
+
+function guestFileName() {
+  return `HOTEL-PEP-GUEST-${String(currentGuest.id).padStart(4, '0')}.png`;
+}
+
+async function prepareGuestImage() {
+  // 等待頁面圖片、字體都可用，並讓瀏覽器完成至少一輪繪製。
+  await waitForStoryImages();
+  const fontEmbedCSS = await prepareFontsForImage();
+  await waitForRender();
+
+  // 首次 html-to-image 轉換用於預熱圖片與 SVG/canvas 資源。
+  // 第二次產出的 PNG 才提供下載與分享。
+  await generateGuestCardBlob(fontEmbedCSS);
+  await waitForRender();
+
+  const blob = await generateGuestCardBlob(fontEmbedCSS);
+
+  preparedShareFile = new File(
     [blob],
-    `HOTEL-PEP-GUEST-${String(currentGuest.id).padStart(4, '0')}.png`,
+    guestFileName(),
     { type: 'image/png' }
   );
 }
 
-// 載入圖片完成後再繼續
-function waitForImage(img) {
-  return new Promise((resolve, reject) => {
-    if (img.complete) {
-      if (img.naturalWidth > 0) resolve();
-      else reject(new Error('Image failed to load'));
-      return;
-    }
-
-    img.addEventListener('load', resolve, { once: true });
-    img.addEventListener('error', () => {
-      reject(new Error('Image failed to load'));
-    }, { once: true });
-  });
-}
-
-// 等待畫面完成渲染
-function waitForRender() {
-  return new Promise(resolve => {
-    requestAnimationFrame(() => {
-      requestAnimationFrame(resolve);
-    });
-  });
-}
-
-// 等待截圖區塊內所有圖片完成載入
-async function waitForStoryImages() {
-  const story = document.getElementById('guest-story');
-
-  const images = Array.from(story.querySelectorAll('img'));
-
-  await Promise.all(
-    images.map(img => waitForImage(img))
-  );
-}
-
-// 讀取住客資料
 async function loadGuest() {
+  downloadButton.disabled = true;
+  shareButton.disabled = true;
+  preparedShareFile = null;
+
+  if (!guestBackground) {
+    setMessage('找不到背景圖片元素，請確認 guest/index.html 已加入 guest-background。');
+    console.error('Missing #guest-background');
+    return;
+  }
 
   if (!guestId || !/^\d+$/.test(guestId)) {
     guestNumber.textContent = 'GUEST NOT FOUND.';
@@ -94,12 +148,17 @@ async function loadGuest() {
     return;
   }
 
+  const validRooms = ['22', '333', '777', '999'];
+  const room = String(data.room);
+
+  if (!validRooms.includes(room)) {
+    guestNumber.textContent = 'INVALID ROOM.';
+    return;
+  }
+
   currentGuest = data;
+  guestNumber.textContent = `NO. ${String(data.id).padStart(4, '0')}`;
 
-  guestNumber.textContent =
-  `NO. ${String(data.id).padStart(4, '0')}`;
-
-  // 以台灣時間顯示入住日期
   const dateText = data.created_at
     ? new Intl.DateTimeFormat('en-CA', {
         timeZone: 'Asia/Taipei',
@@ -109,248 +168,75 @@ async function loadGuest() {
       }).format(new Date(data.created_at))
     : '----';
 
-  document.getElementById('guest-date').textContent =
-    dateText.replaceAll('-', '.');
+  document.getElementById('guest-date').textContent = dateText.replaceAll('-', '.');
 
   guestNickname.textContent = data.nickname;
 
-  // 判斷中文或英文字體
   const hasChinese = /\p{Script=Han}/u.test(data.nickname);
+  guestNickname.classList.toggle('chinese-name', hasChinese);
+  guestNickname.classList.toggle('english-name', !hasChinese);
 
-  guestNickname.classList.toggle(
-    'chinese-name',
-    hasChinese
-  );
-
-  guestNickname.classList.toggle(
-    'english-name',
-    !hasChinese
-  );
-
-  // 依照房號載入對應圖片
-  const validRooms = ['22', '333', '777', '999'];
-  const room = String(data.room);
-
-  if (!validRooms.includes(room)) {
-    guestNumber.textContent = 'INVALID ROOM.';
-    currentGuest = null;
-    return;
-  }
-
-  guestRoomImage.src =
-    `/assets/img/${room}-img.png`;
-
+  // 所有房號均使用 HTML img，而非 CSS background-image。
+  guestRoomImage.src = `../assets/img/${room}-img.png`;
   guestRoomImage.alt = `ROOM ${room}`;
+  guestBackground.src = `../assets/img/share-bg-${room}.png`;
 
-  // 依照房號自動切換截圖背景
-  const guestBackground =
-    document.getElementById('guest-background');
-
-  const backgroundUrl =
-    `../assets/img/share-bg-${room}.png`;
-
-  if (!guestBackground) {
-    console.error('找不到 guest-background 圖片元素');
-
-    downloadMessage.textContent =
-      '背景圖片設定錯誤，請重新整理頁面。';
-
-    return;
-  }
-
-  // 設定對應房號的背景圖片
-  guestBackground.src = backgroundUrl;
+  setMessage('正在準備你的入住紀錄...');
 
   try {
-    await waitForImage(guestBackground);
-
-  } catch (error) {
-    console.error('Background image failed:', error);
-
-    downloadMessage.textContent =
-      '背景圖片載入失敗，請重新整理頁面。';
-
-    return;
-  }
-
-  try {
-    // 等待收據所有圖片載入完成
-    await waitForStoryImages();
-
-    // 等待背景及文字真正完成畫面渲染
-    await waitForRender();
-
-    // 啟用下載功能
+    await prepareGuestImage();
     downloadButton.disabled = false;
-
-    // 預先產生完整分享圖片
-    try {
-      preparedShareFile = await prepareShareImage();
-
-      // 確認分享檔案確實產生成功
-      if (preparedShareFile && preparedShareFile.size > 0) {
-        shareButton.disabled = false;
-      }
-
-    } catch (error) {
-      console.error('Share image preparation failed:', error);
-
-      downloadMessage.textContent =
-        '分享圖片準備失敗，仍可嘗試下載。';
-    }
-
-  } catch (error) {
-    console.error('Guest card images failed:', error);
-
-    downloadMessage.textContent =
-      '入住紀錄圖片載入失敗，請重新整理頁面。';
-
-    downloadButton.disabled = true;
-    shareButton.disabled = true;
+    shareButton.disabled = false;
+    setMessage('');
+  } catch (prepareError) {
+    console.error('Guest image preparation failed:', prepareError);
+    setMessage('入住紀錄圖片準備失敗，請重新整理頁面。');
   }
 }
 
-// 下載入住紀念卡
-downloadButton.addEventListener('click', async () => {
+downloadButton.addEventListener('click', () => {
+  if (!currentGuest || !preparedShareFile) return;
 
-  if (!currentGuest) return;
+  const imageUrl = URL.createObjectURL(preparedShareFile);
+  const link = document.createElement('a');
 
-  downloadButton.disabled = true;
-  downloadButton.textContent = '入住紀錄準備中...';
-  downloadMessage.textContent = '';
+  link.download = guestFileName();
+  link.href = imageUrl;
 
-  try {
-    // 使用與手機分享相同的圖片產生流程
-    const blob = await generateGuestCardBlob();
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
 
-    // 同步更新分享用的圖片
-    preparedShareFile = new File(
-      [blob],
-      `HOTEL-PEP-GUEST-${String(currentGuest.id).padStart(4, '0')}.png`,
-      { type: 'image/png' }
-    );
-
-    const imageData = URL.createObjectURL(blob);
-
-    const link = document.createElement('a');
-
-    link.download =
-      `HOTEL-PEP-GUEST-${String(currentGuest.id).padStart(4, '0')}.png`;
-
-    link.href = imageData;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    setTimeout(() => URL.revokeObjectURL(imageData), 60000);
-
-    downloadMessage.textContent =
-      '您的房卡已經準備好囉!';
-
-  } catch (error) {
-    console.error('Image export failed:', error);
-
-    downloadMessage.textContent =
-      '很抱歉，房卡準備失敗，請重試一次。';
-
-  } finally {
-    downloadButton.disabled = false;
-    downloadButton.innerHTML =
-      '<i class="bi bi-download" aria-hidden="true"></i> 下載你的入住紀錄';
-  }
+  setTimeout(() => URL.revokeObjectURL(imageUrl), 60000);
+  setMessage('您的入住紀錄已經準備好囉！');
 });
 
 shareButton.addEventListener('click', async () => {
+  if (!currentGuest || !preparedShareFile) return;
 
-  // 必須先有完整的分享圖片
-  if (!preparedShareFile) {
-    downloadMessage.textContent =
-      '入住紀錄圖片尚未準備完成，請稍後再試。';
-    return;
-  }
-
-  // 檢查瀏覽器是否支援分享圖片
   if (
     !navigator.share ||
     !navigator.canShare ||
     !navigator.canShare({ files: [preparedShareFile] })
   ) {
-    downloadMessage.textContent =
-      '您的瀏覽器不支援直接分享，請使用下載功能。';
+    setMessage('您的瀏覽器不支援直接分享，請使用下載功能。');
     return;
   }
 
   try {
-    downloadMessage.textContent = '';
+    setMessage('');
 
-    // 直接分享預先產生的圖片
-    await navigator.share({
-      files: [preparedShareFile]
-    });
-
+    // 必須在點擊事件中直接呼叫，避免失去手機瀏覽器的分享權限。
+    await navigator.share({ files: [preparedShareFile] });
   } catch (error) {
     if (error.name !== 'AbortError') {
       console.error('Share failed:', error);
-
-      downloadMessage.textContent =
-        '分享失敗，請下載入住紀錄後再手動分享。';
+      setMessage('分享失敗，請下載入住紀錄後再分享。');
     }
   }
 });
 
-// 等待字體載入，並準備 html-to-image 使用的字體 CSS
-let cachedFontEmbedCSS = null;
-
-async function prepareFontsForImage() {
-  const fonts = [
-    '16px "PeP Special Elite"',
-    '24px "PeP Oooh Baby"',
-    '24px "PeP Cormorant"',
-    '20px "PeP WenKai"'
-  ];
-
-  const results = await Promise.allSettled(
-    fonts.map(font => document.fonts.load(font))
-  );
-
-  results.forEach((result, index) => {
-    if (result.status === 'rejected') {
-      console.warn('字體載入失敗：', fonts[index], result.reason);
-    }
-  });
-
-  await document.fonts.ready;
-
-  if (cachedFontEmbedCSS === null) {
-    cachedFontEmbedCSS =
-      await htmlToImage.getFontEmbedCSS(
-        document.getElementById('guest-story')
-      );
-  }
-
-  return cachedFontEmbedCSS;
-}
-
-// 統一產生房卡圖片
-async function generateGuestCardBlob() {
-  const story = document.getElementById('guest-story');
-
-  const fontEmbedCSS = await prepareFontsForImage();
-  await waitForStoryImages();
-  await waitForRender();
-
-  const blob = await htmlToImage.toBlob(story, {
-    pixelRatio: 1,
-    backgroundColor: '#f7ecd4',
-    canvasWidth: 1080,
-    canvasHeight: 1920,
-    fontEmbedCSS: fontEmbedCSS
-  });
-
-  if (!blob) {
-    throw new Error('Guest card image generation failed');
-  }
-
-  return blob;
-}
-
-loadGuest();
+loadGuest().catch(error => {
+  console.error('Guest initialization failed:', error);
+  setMessage('載入住客資料時發生錯誤，請重新整理頁面。');
+});
