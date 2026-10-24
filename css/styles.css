@@ -151,6 +151,20 @@
         background-size: 100%;
     }
 
+    @media (min-width: 768px) {
+      .chest-mid {
+          padding-right: 4rem !important;
+          padding-left: 4rem !important;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .chest-mid {
+          padding-right: 2rem !important;
+          padding-left: 2rem !important;
+      }
+    }
+
     .chest-bottom {
         background-image: url("../assets/img/chest-footer.png");
         background-repeat: no-repeat;
@@ -187,6 +201,10 @@
         font-size: 1.2rem;
         line-height: 1.5rem;
 
+    }
+
+    .sold-out {
+        font-family: "Cormorant Garamond", serif;
     }
 
     /* =======================
@@ -692,3 +710,4 @@
     min-height: 100px;
   }
 }
+

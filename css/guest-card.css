@@ -206,7 +206,7 @@
 .back-to-register {
   display: inline-block;
   margin-top: 25px;
-  color: #c9a55d;
+  color: #AC9E50;
   text-decoration: none;
   font-size: 12px;
   letter-spacing: 1px;
@@ -247,10 +247,10 @@
   width: 100%;
   padding: 16px 20px;
   margin-bottom: 12px;
-  border: 1px solid #c9a55d;
+  border: 1px solid #AC9E50;
   border-radius: 5px;
   background: #263e32;
-  color: #c9a55d;
+  color: #AC9E50;
   font-family: Georgia, serif;
   font-size: 13px;
   letter-spacing: 1px;
@@ -267,9 +267,9 @@
   width: 100%;
   padding: 16px 20px;
   margin-bottom: 12px;
-  border: 1px solid #c9a55d;
+  border: 1px solid #AC9E50;
   border-radius: 5px;
-  background: #c9a55d;
+  background: #AC9E50;
   color: #263e32;
   font-family: Georgia, serif;
   font-size: 13px;
@@ -684,7 +684,7 @@
   height: 70%;
 
   /* 稍微向左傾斜 */
-  transform: rotate(-9deg);
+  transform: rotate(-9.5deg);
   transform-origin: center center;
 
   padding: 12px;
