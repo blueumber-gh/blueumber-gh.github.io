@@ -344,6 +344,14 @@
   margin-top: -10px;
 }
 
+.back-to-index {
+  display: inline-block;
+  margin-top: 25px;
+  color: #c9a55d;
+  text-decoration: none;
+  font-size: 12px;
+  letter-spacing: 1px;
+}
 
 /* 手機版 */
 
