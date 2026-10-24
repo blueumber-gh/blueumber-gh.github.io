@@ -181,7 +181,7 @@ async function loadGuest() {
   guestRoomImage.alt = `ROOM ${room}`;
   guestBackground.src = `../assets/img/share-bg-${room}.png`;
 
-  setMessage('正在準備你的入住紀錄...');
+  setMessage('正在準備入住紀錄...');
 
   try {
     await prepareGuestImage();
