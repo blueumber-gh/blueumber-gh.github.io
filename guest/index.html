@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hotel PeP | 入住房客 | Papy et Petit-fils 架空飯店企劃特設網頁</title>
+  <meta name="description" vmid="description" content="一本來自老旅館的住客登記簿。這裡收藏著每位旅人的名字與入住房號，無論是剛辦理入住的新房客，或是早已留下紀錄的老朋友，每一個名字，都是 HOTEL PEP 裡值得珍藏的小小回憶。" data-vue-meta="1">
+  <meta property="og:type" content="website">
+  <meta property="og:description" vmid="og:description" content="一本來自老旅館的住客登記簿。這裡收藏著每位旅人的名字與入住房號，無論是剛辦理入住的新房客，或是早已留下紀錄的老朋友，每一個名字，都是 HOTEL PEP 裡值得珍藏的小小回憶。" data-vue-meta="1">
+  <meta property="og:url" content="https://hotelpep.art/">
+  <meta property="og:image" content="../assets/img/og-image.png">
+
+  <link rel="icon" type="image/x-icon" href="../assets/img/favicon.ico" />
+  <meta property="og:site_name" content="Hotel PeP">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Oooh+Baby&family=LXGW+WenKai+Mono+TC&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playwrite+MX+Guides&family=LXGW+WenKai+Mono+TC&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+  <!-- Bootstrap 5 CSS (CDN) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <link href="../css/styles.css?v=20251018" rel="stylesheet" />
+  <link href="../css/guest-card.css?v=20261023-06" rel="stylesheet">
+</head>
+
+<body id="guest-page">
+
+<!-- 吊鍊裝飾區 -->
+<div class="star-decor star-decor-left">
+  <img src="../assets/img/star.png" class="chain chain-1">
+  <img src="../assets/img/star.png" class="chain chain-2">
+  <img src="../assets/img/star.png" class="chain chain-3">
+</div>
+
+<div class="star-decor star-decor-right">
+  <img src="../assets/img/star.png" class="chain chain-4">
+  <img src="../assets/img/star.png" class="chain chain-5">
+  <img src="../assets/img/star.png" class="chain chain-6">
+</div>
+
+  <div class="page-decor-left">
+    <img src="../assets/img/curtain-left.png" alt="左側裝飾圖">
+  </div>
+  <div class="page-decor-right">
+    <img src="../assets/img/curtain-right.png" alt="右側裝飾圖">
+  </div>
+
+  
+<main class="guest-main">
+
+  <!-- 這個區塊會輸出成 IG 限時動態圖片 -->
+  
+    <div id="guest-story" class="guest-story">
+
+        <!-- 放在桌面上的收據 -->
+        <div class="receipt-paper">
+
+          <div class="receipt-inner">
+
+            <!-- 收據上方資訊 -->
+            <div class="receipt-meta">
+              <span>DATE. <span id="guest-date">----</span></span>
+
+              <span class="receipt-monogram">
+                  <img src="../assets/img/pep-logo-notext.png" alt="Hotel PeP Logo">
+              </span>
+
+              <span id="guest-number">NO. ----</span>
+            </div>
+
+            <div class="receipt-rule"></div>
+
+            <!-- 飯店名稱 -->
+            <div class="receipt-brand">
+              <h1>Hotel PeP</h1>
+              <p>Papy et Petit-fils</p>
+            </div>
+
+            <!-- 住客姓名 -->
+            <div class="receipt-recipient">
+              <span>To Mr./Mrs.</span>
+              <span id="guest-nickname">LOADING...</span>
+            </div>
+
+            <!-- 收據明細 -->
+            <div id="guest-card" class="receipt-details">
+
+              <div class="receipt-columns">
+
+                <div class="receipt-description">
+                  <p class="receipt-column-heading">DESCRIPTION</p>
+
+                  <p class="receipt-item">1 Guest</p>
+                  <p class="receipt-item">Accommodation</p>
+
+                  <div class="receipt-thanks">
+                    <p>Received with</p>
+                    <p>thanks.</p>
+                  </div>
+                </div>
+
+                <div class="receipt-room">
+                  <p class="receipt-column-heading">ROOM NO.</p>
+
+                  <div class="guest-divider"><img class="guest-divider-star" src="../assets/img/star-p.png" alt=""></div>
+
+                  <img
+                    id="guest-room-image"
+                    src=""
+                    alt=""
+                  >
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="receipt-footer">
+              <span>HOTELPEP.ART</span>
+            </div>
+
+          </div>
+        </div>
+
+    </div>
+
+
+  <!-- 以下不會出現在下載圖片裡 -->
+  <div class="guest-actions">
+
+    <button
+      type="button"
+      id="share-guest-card"
+      disabled
+    >
+      <i class="bi bi-instagram" aria-hidden="true"></i>
+      分享到限時動態
+    </button>
+
+    <button
+      type="button"
+      id="download-guest-card"
+      disabled
+    >
+      <i class="bi bi-download" aria-hidden="true"></i> 下載你的房卡
+    </button>
+
+    <p id="download-message" role="status"></p>
+
+    <a href="../guests.html" class="back-to-register">
+      ← 回到住客名簿 GUEST REGISTER
+    </a>
+
+  </div>
+
+</main>
+
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js"></script>
+  <script src="../js/guest.js?v=20261023-08"></script>
+
+</body>
+
+</html>

@@ -436,4 +436,91 @@
       .product-card:hover .key-wrap {
         transform: rotateY(180deg);
       }
+
+
+    /*guest list*/
+    .room-list {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+
+    .room-card {
+      width: 150px;
+      height: 100px;
+      background: white;
+      border: 1px solid #999;
+      cursor: pointer;
+    }
+
+    .room-card.selected {
+      border: 3px solid black;
+    }
+}
+
+
+/* 管理員後台 */
+.staff-container {
+  max-width: 700px;
+  margin: 70px auto;
+  padding: 0 24px 80px;
+}
+
+/* 確保隱藏區塊不被其他 CSS 覆蓋 */
+[hidden] {
+  display: none !important;
+}
+
+#login-section {
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 35px;
+  border: 1px solid #b5a05b;
+  background: #f7ecd4;
+  color: #594731;
+}
+
+#login-section h2 {
+  text-align: center;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  letter-spacing: 3px;
+}
+
+#login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 25px;
+}
+
+#login-form input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #b5a05b;
+  background: #fffaf0;
+  color: #594731;
+}
+
+#login-button {
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid #b5a05b;
+  background: #263e32;
+  color: #f7ecd4;
+  cursor: pointer;
+}
+
+#logout-button {
+  margin-bottom: 25px;
+  padding: 8px 16px;
+  border: 1px solid #b5a05b;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+#login-message {
+  margin-top: 15px;
+  font-size: 13px;
 }

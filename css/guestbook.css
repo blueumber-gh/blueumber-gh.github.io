@@ -1,0 +1,419 @@
+
+/* HOTEL PEP — GUEST REGISTER */
+
+:root {
+  --book-green: #263e32;
+  --book-gold: #AC9E50;
+  --book-paper: #f7ecd4;
+  --book-brown: #594731;
+}
+
+@media (max-width: 767px) {
+  #guests .chain-3, #guests .chain-4 {
+    display: none;
+  }
+}
+
+/* 書本展示區 */
+
+.guestbook-section {
+  width: 100%;
+  max-width: 1100px;
+  margin: 50px auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+/* 深綠色書皮 */
+
+.guestbook {
+  display: flex;
+  width: 100%;
+  min-height: 550px;
+  padding: 15px;
+  background: #7c6c3d;
+  border: 3px solid var(--book-gold);
+  border-radius: 18px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* 左右書頁 */
+
+.book-page {
+  width: 50%;
+  min-width: 0;
+  min-height: 520px;
+  background: var(--book-paper);
+  padding: 30px;
+  box-sizing: border-box;
+  position: relative;
+  color: var(--book-brown);
+}
+
+/* 左頁 */
+
+.book-page-left {
+  border-radius: 12px 0 0 12px;
+  border-right: 1px solid #c8b89c;
+  background: linear-gradient(
+    to right,
+    #f7ecd4 0%,
+    #f7ecd4 90%,
+    #e7d5b4 100%
+  );
+}
+
+/* 右頁 */
+
+.book-page-right {
+  border-radius: 0 12px 12px 0;
+  background: linear-gradient(
+    to left,
+    #f7ecd4 0%,
+    #f7ecd4 90%,
+    #e7d5b4 100%
+  );
+}
+
+/* 內頁金色裝飾框 */
+
+.page-content {
+  height: 100%;
+  min-height: 460px;
+  border: 1px solid var(--book-gold);
+  border-radius: 10px;
+  padding: 25px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* 頁面上方的小星星 */
+
+.page-content::before {
+  content: "✦";
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--book-gold);
+  background: var(--book-paper);
+  padding: 0 12px;
+  font-size: 24px;
+}
+
+/* 翻頁控制區 */
+
+.book-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.book-controls button {
+  background: var(--book-green);
+  color: var(--book-gold);
+  border: 1px solid var(--book-gold);
+  padding: 12px 22px;
+  cursor: pointer;
+  font-family: Georgia, serif;
+  letter-spacing: 1px;
+}
+
+.book-controls button:hover {
+  background: var(--book-gold);
+  color: var(--book-green);
+}
+
+.book-controls button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+#page-indicator {
+  font-family: Georgia, serif;
+  color: var(--book-gold);
+  letter-spacing: 2px;
+  white-space: nowrap;
+}
+
+/* 手機版：一次顯示一頁 */
+
+@media (max-width: 767px) {
+
+  .guestbook-section {
+    margin: 30px auto;
+    padding: 0 12px;
+  }
+
+  .guestbook {
+    min-height: 500px;
+    padding: 10px;
+  }
+
+  .book-page {
+    width: 100%;
+    min-height: 470px;
+    padding: 18px;
+  }
+
+  .book-page-left {
+    border-radius: 10px;
+    border-right: none;
+    background: var(--book-paper);
+  }
+
+  .book-page-right {
+    display: none;
+  }
+
+  .page-content {
+    min-height: 430px;
+    padding: 20px 14px;
+  }
+
+  .book-controls {
+    gap: 12px;
+  }
+
+  .book-controls button {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  #page-indicator {
+    font-size: 11px;
+    letter-spacing: 0;
+  }
+}
+
+
+/* 每頁的住客排列 */
+
+.page-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  gap: 10px;
+}
+
+/* =========================
+   住客資料整體排版
+========================= */
+
+.guest-entry {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 14px;
+  min-height: 300px;
+  padding: 12px 6px;
+
+  color: var(--book-brown);
+  text-decoration: none;
+  text-align: center;
+  border-bottom: none;
+  transition: background-color 0.2s ease;
+}
+
+.guest-entry:hover {
+  background-color: rgba(201, 165, 93, 0.08);
+}
+
+
+/* =========================
+   住客編號
+========================= */
+
+.guest-number {
+  font-family: Georgia, serif;
+  font-size: 12px;
+  letter-spacing: 2px;
+}
+
+
+/* =========================
+   住客簽名與四條橫線
+========================= */
+
+.guest-name {
+  display: block;
+  width: 90%;
+  min-height: 70px;
+  box-sizing: border-box;
+
+  font-weight: 400;
+  line-height: 70px;
+  text-align: center;
+  overflow-wrap: anywhere;
+
+  color: #594731;
+
+  background-image: linear-gradient(
+    to bottom,
+    transparent 15%,
+    rgba(110, 105, 95, 0.25) 15%,
+    rgba(110, 105, 95, 0.25) calc(15% + 1px),
+    transparent calc(15% + 1px),
+
+    transparent 38%,
+    rgba(110, 105, 95, 0.25) 38%,
+    rgba(110, 105, 95, 0.25) calc(38% + 1px),
+    transparent calc(38% + 1px),
+
+    transparent 61%,
+    rgba(110, 105, 95, 0.25) 61%,
+    rgba(110, 105, 95, 0.25) calc(61% + 1px),
+    transparent calc(61% + 1px),
+
+    transparent 84%,
+    rgba(110, 105, 95, 0.25) 84%,
+    rgba(110, 105, 95, 0.25) calc(84% + 1px),
+    transparent calc(84% + 1px)
+  );
+}
+
+/* 英文暱稱 */
+.guest-name.english-name {
+  font-family: 'Oooh Baby', cursive;
+  font-size: 36px;
+}
+
+/* 中文暱稱 */
+.guest-name.chinese-name {
+  font-family: 'LXGW WenKai Mono TC', serif;
+  font-size: 26px;
+}
+
+
+/* 金色裝飾 */
+
+/* 垂直金色裝飾 */
+.guest-divider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  width: 30px;
+  height: 80px;
+  margin: 8px auto 0;
+}
+
+/* 上下金色直線 */
+.guest-divider::before,
+.guest-divider::after {
+  content: "";
+  border-right: 2px #b5a05b solid;
+  flex: 1;
+}
+
+/* 中間的星星圖片 */
+.guest-divider-star {
+  display: block;
+  width: 35px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+
+/* 房號標題 */
+
+.guest-room {
+  font-family: Georgia, serif;
+  font-size: 18px;
+  letter-spacing: 4px;
+  color: #b5a05b;
+}
+
+
+/* 房號插圖 */
+
+.guest-room-image {
+  display: block;
+  width: 140px;
+  max-width: 65%;
+  height: auto;
+  object-fit: contain;
+  margin-top: -10px;
+}
+
+
+/* 手機版 */
+
+@media (max-width: 767px) {
+  .guest-entry {
+    gap: 10px;
+    min-height: 260px;
+  }
+
+  .guest-name {
+    width: 95%;
+  }
+
+  .guest-name.english-name {
+    font-size: 30px;
+  }
+
+  .guest-name.chinese-name {
+    font-size: 23px;
+  }
+
+  .guest-room {
+    font-size: 15px;
+    letter-spacing: 3px;
+  }
+
+  .guest-room-image {
+    width: 110px;
+  }
+}
+
+/* 住客名簿圖片標題 */
+.guestbook-title {
+  margin: 0 auto 30px;
+  text-align: center;
+}
+
+.guestbook-title img {
+  display: block;
+  width: 250px;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto -150px auto;
+  position: relative;
+  z-index: 999;
+}
+
+/* 手機版 */
+@media (max-width: 767px) {
+  .guestbook-title img {
+    width: 225px;
+    padding-top: 10px;
+    margin-bottom: -118px;
+  }
+}
+
+/* 書頁內容淡入淡出 */
+.page-content {
+  transition: opacity 0.35s ease-in-out;
+  opacity: 1;
+}
+
+/* 切換時淡出 */
+.page-content.is-fading {
+  opacity: 0;
+}
+
+/* 尊重使用者的減少動態效果設定 */
+@media (prefers-reduced-motion: reduce) {
+  .page-content {
+    transition: none;
+  }
+}

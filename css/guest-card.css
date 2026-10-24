@@ -1,0 +1,708 @@
+/* HOTEL PEP 本機字體 */
+
+@font-face {
+  font-family: 'PeP Special Elite';
+  src: url('../assets/fonts/SpecialElite-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PeP Oooh Baby';
+  src: url('../assets/fonts/OoohBaby-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PeP Cormorant';
+  src: url('../assets/fonts/CormorantGaramond-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PeP WenKai';
+  src: url('../assets/fonts/LXGWWenKaiMonoTC-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+/* HOTEL PEP - Guest Story Card */
+
+#guest-page {
+  background: #263e32;
+}
+
+.guest-main {
+  width: 100%;
+  padding: 60px 20px 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+/* 9:16 紀念卡 */
+.guest-story {
+  width: 100%;
+  max-width: 405px;
+  aspect-ratio: 9 / 16;
+  background: #f7ecd4;
+  color: #594731;
+  padding: 18px;
+  box-sizing: border-box;
+  font-family: Georgia, serif;
+}
+
+.story-inner {
+  width: 100%;
+  height: 100%;
+  border: 2px solid #c9a55d;
+  padding: 28px 22px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.story-header p {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 2px;
+}
+
+.story-header h1 {
+  margin: 12px 0;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 46px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  color: #263e32;
+}
+
+.story-star {
+  margin: 8px 0;
+  font-size: 20px;
+  color: #c9a55d;
+}
+
+.story-guest {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+#guest-number {
+  margin: 0;
+  font-size: 13px;
+  letter-spacing: 2px;
+}
+
+#guest-nickname {
+  width: 100%;
+  margin: 0;
+  font-size: 36px;
+  font-weight: 400;
+  overflow-wrap: anywhere;
+  line-height: 1.4;
+}
+
+/* 英文與中文暱稱字體 */
+#guest-nickname.english-name {
+  font-family: 'Oooh Baby', cursive;
+}
+
+#guest-nickname.chinese-name {
+  font-family: 'LXGW WenKai Mono TC', serif;
+  font-size: 29px;
+}
+
+.story-divider {
+  color: #c9a55d;
+  font-size: 24px;
+}
+
+.story-room-label {
+  margin: 0;
+  font-size: 18px;
+  letter-spacing: 4px;
+}
+
+#guest-room-image {
+  display: block;
+  width: 155px;
+  max-width: 80%;
+  height: auto;
+  object-fit: contain;
+}
+
+.story-footer p {
+  margin: 0 0 12px;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 20px;
+  font-style: italic;
+}
+
+.story-footer span {
+  font-size: 11px;
+  letter-spacing: 2px;
+}
+
+/* 下載與分享區 */
+.guest-actions {
+  width: 100%;
+  max-width: 405px;
+  margin-top: 30px;
+  text-align: center;
+  color: #f7ecd4;
+}
+
+#download-guest-card {
+  width: 100%;
+  padding: 16px 20px;
+  border: 1px solid #c9a55d;
+  background: #c9a55d;
+  color: #263e32;
+  font-family: Georgia, serif;
+  font-size: 13px;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+#download-guest-card:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+#download-message {
+  font-size: 13px;
+  margin-top: 12px;
+}
+
+.share-guide {
+  margin-top: 35px;
+}
+
+.share-guide h2 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 26px;
+}
+
+.share-guide p {
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.back-to-register {
+  display: inline-block;
+  margin-top: 25px;
+  color: #c9a55d;
+  text-decoration: none;
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+
+@media (max-width: 767px) {
+  .guest-main {
+    padding: 30px 12px 60px;
+  }
+
+  .guest-story {
+    padding: 12px;
+  }
+
+  .story-inner {
+    padding: 20px 14px;
+  }
+
+  .story-header h1 {
+    font-size: 38px;
+  }
+
+  #guest-nickname {
+    font-size: 30px;
+  }
+
+  #guest-nickname.chinese-name {
+    font-size: 25px;
+  }
+
+  #guest-room-image {
+    width: 125px;
+  }
+}
+
+/* 下載按鈕 Icon */
+#download-guest-card {
+  width: 100%;
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  border: 1px solid #c9a55d;
+  border-radius: 5px;
+  background: #263e32;
+  color: #c9a55d;
+  font-family: Georgia, serif;
+  font-size: 13px;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+#download-guest-card .bi {
+  font-size: 17px;
+  margin-right: 8px;
+  vertical-align: -1px;
+}
+
+#share-guest-card {
+  width: 100%;
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  border: 1px solid #c9a55d;
+  border-radius: 5px;
+  background: #c9a55d;
+  color: #263e32;
+  font-family: Georgia, serif;
+  font-size: 13px;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+#share-guest-card .bi {
+  margin-right: 8px;
+  font-size: 17px;
+}
+
+#share-guest-card:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+/* =====================================
+   HOTEL PEP - Vintage Receipt
+===================================== */
+
+.guest-story {
+  background: #f7ecd4;
+  padding: 18px;
+  color: #302c27;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+.receipt-inner {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 15px 10px;
+  box-sizing: border-box;
+}
+
+/* DATE / NO. */
+
+.receipt-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-family: Georgia, serif;
+  font-size: 11px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.receipt-monogram {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.receipt-monogram img {
+  display: block;
+  width: 35px;
+  height: 35px;
+  object-fit: contain;
+}
+
+.receipt-rule {
+  width: 100%;
+  border-top: 2px solid #302c27;
+  margin-top: 8px;
+}
+
+/* 飯店名稱 */
+
+.receipt-brand {
+  text-align: center;
+  padding: 10px 0 15px;
+}
+
+.receipt-brand h1 {
+  margin: 0;
+  color: #263e32;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 56px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  letter-spacing: -1px;
+}
+
+.receipt-brand p {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.1;
+  letter-spacing: 1px;
+}
+
+/* 住客姓名 */
+
+.receipt-recipient {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 22px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.receipt-recipient > span:first-child {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+#guest-nickname {
+  flex: 1;
+  min-width: 0;
+  padding-bottom: 3px;
+  border-bottom: 1px dotted #594731;
+  text-align: center;
+  font-size: 24px;
+  font-weight: normal;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+#guest-nickname.english-name {
+  font-family: 'Oooh Baby', cursive;
+}
+
+#guest-nickname.chinese-name {
+  font-family: 'LXGW WenKai Mono TC', serif;
+  font-size: 19px;
+}
+
+/* 收據明細框 */
+
+.receipt-details {
+  border: 4px double #302c27;
+  padding: 8px;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.receipt-columns {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+/* 左側明細欄 */
+.receipt-description {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 8px;
+  border-right: 1px solid #594731;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* 收據品項 */
+.receipt-description .receipt-item {
+  margin: 0 0 12px;
+  font-family: 'PeP Oooh Baby', cursive;
+  font-size: 25px;
+  line-height: 1.2;
+}
+
+/* 感謝文字 */
+.receipt-description .receipt-thanks {
+  margin-top: auto;
+  padding: 12px 0 15px;
+
+  font-family: 'PeP Oooh Baby', cursive;
+  font-size: 23px;
+  line-height: 1.15;
+  text-align: center;
+
+  transform: rotate(-5deg);
+}
+
+.receipt-description .receipt-thanks p {
+  margin: 0;
+}
+
+.receipt-room {
+  width: 36%;
+  padding: 10px 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.receipt-column-heading {
+  margin: 0 0 5px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.receipt-item {
+  margin: 0 0 15px;
+  font-family: 'Oooh Baby', 'LXGW WenKai Mono TC', cursive;
+  font-size: 28px;
+  line-height: 1.3;
+}
+
+.receipt-handwriting {
+  margin-top: 45px;
+  font-family: 'Oooh Baby', cursive;
+  font-size: 24px;
+  line-height: 1.4;
+  transform: rotate(-4deg);
+}
+
+/* 垂直金色裝飾 */
+.guest-divider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  width: 30px;
+  height: 80px;
+  margin: 0 auto;
+}
+
+/* 上下金色直線 */
+.guest-divider::before,
+.guest-divider::after {
+  content: "";
+  border-right: 2px #b5a05b solid;
+  flex: 1;
+}
+
+/* 中間的星星圖片 */
+.guest-divider-star {
+  display: block;
+  width: 35px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+#guest-room-image {
+  width: 100%;
+  max-width: 110px;
+  height: auto;
+  object-fit: contain;
+}
+
+/* 收據底部感謝文字 */
+
+.receipt-thanks {
+  padding: 14px 10px 18px;
+  text-align: center;
+  font-family: 'Oooh Baby', cursive;
+  font-size: 25px;
+  line-height: 1.2;
+  transform: rotate(-5deg);
+}
+
+.receipt-thanks p {
+  margin: 0;
+}
+
+/* 網站資訊 */
+
+.receipt-footer {
+  flex-shrink: 0;
+  padding-top: 22px;
+  text-align: center;
+}
+
+.receipt-footer p {
+  margin: 0 0 8px;
+  font-size: 19px;
+  font-style: italic;
+  line-height: 1.2;
+}
+
+.receipt-footer span {
+  display: block;
+  font-family: Georgia, serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+}
+
+/* 手機畫面 */
+
+@media (max-width: 767px) {
+  .guest-story {
+    padding: 12px;
+  }
+
+  .receipt-inner {
+    padding: 10px 5px;
+  }
+
+  .receipt-brand h1 {
+    font-size: clamp(35px, 10vw, 52px);
+  }
+
+  .receipt-brand p {
+    font-size: 19px;
+  }
+
+  .receipt-meta {
+    font-size: 9px;
+  }
+
+  .receipt-recipient {
+    font-size: 12px;
+  }
+
+  #guest-nickname {
+    font-size: 20px;
+  }
+
+  .receipt-item {
+    font-size: 21px;
+  }
+
+  .receipt-handwriting {
+    font-size: 20px;
+  }
+
+  .receipt-thanks {
+    font-size: 25px;
+  }
+}
+
+/* 復古打字機字體 */
+.receipt-meta,
+.receipt-recipient > span:first-child,
+.receipt-column-heading {
+  font-family: 'Special Elite', monospace;
+}
+
+/* 收據字體統一指定為本機版本 */
+
+.receipt-meta,
+.receipt-recipient > span:first-child,
+.receipt-column-heading {
+  font-family: 'PeP Special Elite', monospace;
+}
+
+.receipt-brand h1,
+.receipt-brand p {
+  font-family: 'PeP Cormorant', Georgia, serif;
+  font-weight: 400;
+}
+
+.receipt-item,
+.receipt-handwriting,
+.receipt-thanks {
+  font-family: 'PeP Oooh Baby', cursive;
+}
+
+.receipt-item {
+  border-bottom: 1px dotted #594731;
+}
+
+#guest-nickname.english-name {
+  font-family: 'PeP Oooh Baby', cursive;
+}
+
+#guest-nickname.chinese-name {
+  font-family: 'PeP WenKai', serif;
+}
+
+/* =====================================
+   HOTEL PEP - 桌面背景與傾斜收據
+===================================== */
+
+/* 整張 IG 限時動態圖片 */
+#guest-story {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 9 / 16;
+
+  background-image: url('../assets/img/share-bg.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+
+  overflow: hidden;
+}
+
+/* 放在桌面上的收據 */
+#guest-story .receipt-paper {
+  position: absolute;
+
+  /* 收據在整張圖片中的位置 */
+  left: 11%;
+  top: 15%;
+
+  /* 收據大小 */
+  width: 79%;
+  height: 70%;
+
+  /* 稍微向左傾斜 */
+  transform: rotate(-9deg);
+  transform-origin: center center;
+
+  padding: 12px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* 讓原本的收據內容填滿紙張 */
+#guest-story .receipt-inner {
+  height: 100%;
+  padding: 10px 6px;
+  box-sizing: border-box;
+}
+
+.receipt-details {
+  min-height: 0;
+}
+
+.receipt-columns {
+  min-height: 0;
+  height: 100%;
+}
+
+.receipt-description .receipt-item {
+  font-size: 22px;
+}
+
+.receipt-description .receipt-thanks {
+  font-size: 20px;
+}

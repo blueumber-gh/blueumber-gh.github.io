@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hotel PeP | Papy et Petit-fils 架空飯店企劃特設網頁</title>
+  <meta name="description" vmid="description" content="一份來自老旅館的商品菜單。請自由挑選屬於你的房間小物，無論是午後茶系列、旅宿配件，或象徵入住儀式的經典鑰匙吊飾，每一件都是旅館裡遺留下的小記憶。" data-vue-meta="1">
+  <meta property="og:type" content="website">
+  <meta property="og:description" vmid="og:description" content="一份來自老旅館的商品菜單。請自由挑選屬於你的入住小物，無論是旅宿配件，午茶系列、或象徵入住儀式的經典鑰匙吊飾，每一件都是旅館裡遺留下的小記憶。" data-vue-meta="1">
+  <meta property="og:url" content="https://hotelpep.art/">
+  <meta property="og:image" content="assets/img/og-image.png">
+
+  <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
+  <meta property="og:site_name" content="Clibo 同人委託平台">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
+  <!-- Bootstrap 5 CSS (CDN) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <link href="css/styles.css?v=20261023-01" rel="stylesheet" />
+</head>
+
+<body>
+
+  <main class="staff-container">
+
+    <h1>HOTEL PEP</h1>
+
+    <!-- 登入狀態確認中 -->
+    <p id="auth-loading">VERIFYING STAFF ACCESS...</p>
+
+    <!-- 管理員登入畫面 -->
+    <section id="login-section" hidden>
+      <h2>STAFF ONLY</h2>
+      <p>MANAGEMENT ACCESS</p>
+
+      <form id="login-form">
+        <label for="staff-email">EMAIL</label>
+        <input
+          type="email"
+          id="staff-email"
+          autocomplete="username"
+          required
+        >
+
+        <label for="staff-password">PASSWORD</label>
+        <input
+          type="password"
+          id="staff-password"
+          autocomplete="current-password"
+          required
+        >
+
+        <button type="submit" id="login-button">
+          LOG IN
+        </button>
+      </form>
+
+      <p id="login-message" role="status"></p>
+    </section>
+
+    <!-- 管理員入住後台 -->
+    <section id="admin-section" hidden>
+
+      <h2>HOTEL PEP CHECK-IN</h2>
+
+      <button type="button" id="logout-button">
+        LOG OUT
+      </button>
+
+      <form id="checkin-form">
+        <label for="nickname">Nickname</label>
+        <input
+          type="text"
+          id="nickname"
+          maxlength="20"
+          required
+        >
+
+        <p>SELECT YOUR ROOM</p>
+
+        <div class="room-list">
+          <button type="button" class="room-card" data-room="22">
+            ROOM 22
+          </button>
+
+          <button type="button" class="room-card" data-room="333">
+            ROOM 333
+          </button>
+
+          <button type="button" class="room-card" data-room="777">
+            ROOM 777
+          </button>
+
+          <button type="button" class="room-card" data-room="999">
+            ROOM 999
+          </button>
+        </div>
+
+        <input type="hidden" id="room" value="">
+
+        <button type="submit" id="checkin-button">
+          CHECK IN
+        </button>
+      </form>
+
+      <p id="message" role="status"></p>
+
+    </section>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/check-in.js?v=20261023-01"></script>
+
+</body>
+</html>
