@@ -214,7 +214,7 @@
 
 @media (max-width: 767px) {
   .guest-main {
-    padding: 30px 12px 60px;
+    padding: 15px 12px 60px;
   }
 
   .guest-story {
@@ -442,7 +442,7 @@
 /* 感謝文字 */
 .receipt-description .receipt-thanks {
   margin-top: auto;
-  padding: 12px 0 15px;
+  padding: 0 0 15px;
 
   font-family: 'PeP Oooh Baby', cursive;
   font-size: 23px;
@@ -713,5 +713,19 @@
 }
 
 .receipt-description .receipt-thanks {
-  font-size: 20px;
+  font-size: 18px;
+}
+
+@media (max-width: 768px) {
+  .star-decor,
+  .page-decor-left,
+  .page-decor-right {
+    display: none !important;
+  }
+
+  .guest-actions {
+  width: 90%;
+  margin-top: -30px;
+  position: relative;
+  }
 }
