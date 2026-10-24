@@ -222,6 +222,14 @@ downloadButton.addEventListener('click', async () => {
   try {
     // 使用與手機分享相同的圖片產生流程
     const blob = await generateGuestCardBlob();
+
+    // 同步更新分享用的圖片
+    preparedShareFile = new File(
+      [blob],
+      `HOTEL-PEP-GUEST-${String(currentGuest.id).padStart(4, '0')}.png`,
+      { type: 'image/png' }
+    );
+
     const imageData = URL.createObjectURL(blob);
 
     const link = document.createElement('a');
