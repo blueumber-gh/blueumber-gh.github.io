@@ -524,3 +524,171 @@
   margin-top: 15px;
   font-size: 13px;
 }
+
+
+/* HOTEL PEP CHECK-IN */
+
+.staff-container {
+  width: min(100% - 32px, 480px);
+  margin: 48px auto 80px;
+  color: #294738;
+}
+
+.staff-container #admin-section {
+  background: #f7f0df;
+  padding: 28px 24px;
+  border: 1px solid #c5b58e;
+}
+
+.staff-container .checkin-heading {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.staff-container .checkin-eyebrow {
+  display: block;
+  color: #a58b47;
+  font-size: 13px;
+  letter-spacing: 0.18em;
+}
+
+.staff-container .checkin-heading h2 {
+  margin: 6px 0;
+  color: #294738;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 44px;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.staff-container .checkin-heading p {
+  margin: 0;
+  color: #a58b47;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+}
+
+.staff-container #logout-button {
+  display: block;
+  margin: 0 0 28px auto;
+  padding: 6px 12px;
+  border: 1px solid #b9a46e;
+  background: transparent;
+  color: #8c783f;
+  font-size: 12px;
+}
+
+.staff-container #checkin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.staff-container #checkin-form label,
+.staff-container #checkin-form > p {
+  margin: 0;
+  color: #294738;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+}
+
+.staff-container #nickname {
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 14px;
+  border: 1px solid #c5b58e;
+  border-radius: 2px;
+  background: #fffdf8;
+  color: #294738;
+  font-size: 16px;
+}
+
+.staff-container .room-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.staff-container .room-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  min-height: 108px;
+  padding: 12px;
+  border: 1px solid #c5b58e;
+  border-radius: 3px;
+  background: #fffdf8;
+  color: #294738;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.staff-container .room-label {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+}
+
+.staff-container .room-number {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 38px;
+  line-height: 1;
+}
+
+.staff-container .room-status {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: #a58b47;
+}
+
+.staff-container .room-card.is-selected,
+.staff-container .room-card[aria-pressed="true"] {
+  background: #294738;
+  border-color: #294738;
+  color: #fff4d7;
+}
+
+.staff-container .room-card.is-selected .room-status,
+.staff-container .room-card[aria-pressed="true"] .room-status {
+  color: #e4cf91;
+}
+
+.staff-container #checkin-button {
+  width: 100%;
+  min-height: 52px;
+  border: 0;
+  border-radius: 3px;
+  background: #b99a57;
+  color: #fff;
+  font-size: 15px;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+}
+
+.staff-container #checkin-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+  .staff-container {
+    width: calc(100% - 28px);
+    margin-top: 28px;
+  }
+
+  .staff-container #admin-section {
+    padding: 24px 18px;
+  }
+
+  .staff-container .room-list {
+    gap: 10px;
+  }
+
+  .staff-container .room-card {
+    min-height: 100px;
+  }
+}

@@ -110,25 +110,42 @@ logoutButton.addEventListener('click', async () => {
   }
 
   form.reset();
-  roomInput.value = '';
-  roomCards.forEach(card => card.classList.remove('selected'));
+  updateRoomSelection('');
   message.textContent = '';
 
   showLogin();
 });
 
-// 房號選擇
+
+// 房號選擇：同步更新選取樣式及文字
+function updateRoomSelection(selectedRoom) {
+  roomInput.value = selectedRoom;
+
+  roomCards.forEach(card => {
+    const isSelected = card.dataset.room === selectedRoom;
+
+    // 同時保留舊版 selected，避免影響原本樣式
+    card.classList.toggle('selected', isSelected);
+    card.classList.toggle('is-selected', isSelected);
+
+    // 讓 iOS 與輔助工具都能辨識選取狀態
+    card.setAttribute('aria-pressed', String(isSelected));
+
+    // 更新按鈕下方的狀態文字
+    const status = card.querySelector('.room-status');
+
+    if (status) {
+      status.textContent = isSelected ? '✓ SELECTED' : 'SELECT';
+    }
+  });
+}
+
 roomCards.forEach(card => {
   card.addEventListener('click', () => {
-
-    roomCards.forEach(item => {
-      item.classList.remove('selected');
-    });
-
-    card.classList.add('selected');
-    roomInput.value = card.dataset.room;
+    updateRoomSelection(card.dataset.room);
   });
 });
+
 
 // 入住
 form.addEventListener('submit', async (event) => {
